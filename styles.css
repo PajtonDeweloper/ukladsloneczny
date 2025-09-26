@@ -9,6 +9,18 @@ html {
     scroll-padding-top: 100px;
 }
 
+/* GLOBALNE OPTYMALIZACJE WYDAJNOŚCI */
+* {
+    /* Zmniejsz repaint i reflow dla animowanych elementów */
+    will-change: auto;
+}
+
+/* Optymalizacja GPU dla animowanych elementów */
+.sun, .sun-glow, .hero-orbit, .hero-planet {
+    transform: translateZ(0); /* Force GPU layer */
+    backface-visibility: hidden;
+}
+
 /* Prevent horizontal scroll - SIMPLE */
 body {
     overflow-x: hidden;
@@ -124,16 +136,20 @@ nav[class*="fixed"] {
     margin-bottom: 1rem;
 }
 
-/* SYSTEM ORBIT - IDEALNIE WYŚRODKOWANY NA SŁOŃCU */
+/* SYSTEM ORBIT - ZOPTYMALIZOWANY DLA MOBILE */
 #hero-solar-system {
     position: absolute;
-    top: 50%;   /* Środek słońca */
-    left: 50%;  /* Środek słońca */
+    top: 50%;
+    left: 50%;
     width: 1600px;
     height: 1600px;
-    transform: translate(-50%, -50%); /* Dokładne środkowanie na środku słońca */
+    transform: translate(-50%, -50%);
     pointer-events: none;
     z-index: 50;
+    will-change: transform; /* GPU acceleration */
+    /* Ukrywaj na urządzeniach o niskiej wydajności */
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
 }
 
 .hero-orbit {
@@ -143,6 +159,8 @@ nav[class*="fixed"] {
     border-radius: 50%;
     animation: rotate-orbit linear infinite;
     transform-origin: center center;
+    will-change: transform; /* GPU acceleration */
+    backface-visibility: hidden; /* Optymalizacja 3D */
 }
 
 /* Rozmiary orbit i prędkości - POWIĘKSZONE 5x */
@@ -274,6 +292,7 @@ nav[class*="fixed"] {
     }
 }
 
+/* STARA animacja pulse-glow - zachowana dla kompatybilności */
 @keyframes pulse-glow {
     0% { 
         box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
@@ -282,6 +301,30 @@ nav[class*="fixed"] {
     100% { 
         box-shadow: 0 0 40px rgba(245, 158, 11, 0.8), 0 0 60px rgba(245, 158, 11, 0.4);
         transform: scale(1.05);
+    }
+}
+
+/* NOWA ZOPTYMALIZOWANA animacja - używa tylko transform */
+@keyframes pulse-glow-optimized {
+    0% { 
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.6;
+    }
+    100% { 
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 0.9;
+    }
+}
+
+/* ZOPTYMALIZOWANA animacja dla MOBILE - bardzo lekka */
+@keyframes pulse-glow-mobile {
+    0% { 
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.4;
+    }
+    100% { 
+        transform: translate(-50%, -50%) scale(1.05);
+        opacity: 0.7;
     }
 }
 
@@ -300,14 +343,15 @@ nav[class*="fixed"] {
     100% { transform: rotate(360deg); }
 }
 
-/* Sun Styles */
+/* Sun Styles - ZOPTYMALIZOWANE DLA MOBILE */
 .sun-container {
     width: 200px;
     height: 200px;
     margin: 0 auto;
     position: relative;
-    animation: none !important; /* Always stationary */
+    animation: none !important;
     flex-shrink: 0;
+    will-change: transform; /* Optymalizacja GPU */
 }
 
 .sun {
@@ -315,11 +359,12 @@ nav[class*="fixed"] {
     height: 200px;
     background: radial-gradient(circle, #FFD700 0%, #FFA500 50%, #FF6347 100%);
     border-radius: 50%;
-    box-shadow: 0 0 60px rgba(255, 215, 0, 0.8);
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.6); /* Zmniejszony blur dla wydajności */
     position: relative;
     z-index: 5;
     flex-shrink: 0;
     aspect-ratio: 1/1;
+    will-change: transform;
 }
 
 .sun-glow {
@@ -328,15 +373,16 @@ nav[class*="fixed"] {
     left: 50%;
     width: 200px;
     height: 200px;
-    background: radial-gradient(circle, rgba(255, 165, 0, 0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(255, 165, 0, 0.2) 0%, transparent 60%); /* Zmniejszona intensywność */
     border-radius: 50%;
-    animation: pulse-glow 3s ease-in-out infinite alternate;
+    animation: pulse-glow-optimized 4s ease-in-out infinite alternate; /* Nowa zoptymalizowana animacja */
     z-index: 1;
     pointer-events: none;
     transform: translate(-50%, -50%);
+    will-change: transform, opacity;
 }
 
-/* Sun in planet format - ten sam styl co w hero */
+/* Sun in planet format - ZOPTYMALIZOWANY */
 .planet-visual .sun-container {
     width: 250px;
     height: 250px;
@@ -344,6 +390,7 @@ nav[class*="fixed"] {
     position: relative;
     animation: none !important;
     flex-shrink: 0;
+    will-change: transform;
 }
 
 .planet-visual .sun {
@@ -351,11 +398,12 @@ nav[class*="fixed"] {
     height: 250px;
     background: radial-gradient(circle, #FFD700 0%, #FFA500 50%, #FF6347 100%);
     border-radius: 50%;
-    box-shadow: 0 0 80px rgba(255, 215, 0, 0.8);
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.6); /* Zmniejszony blur */
     position: relative;
     z-index: 5;
     flex-shrink: 0;
     aspect-ratio: 1/1;
+    will-change: transform;
 }
 
 .planet-visual .sun-glow {
@@ -364,12 +412,13 @@ nav[class*="fixed"] {
     left: 50%;
     width: 250px;
     height: 250px;
-    background: radial-gradient(circle, rgba(255, 165, 0, 0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(255, 165, 0, 0.2) 0%, transparent 60%); /* Zmniejszona intensywność */
     border-radius: 50%;
-    animation: pulse-glow 3s ease-in-out infinite alternate;
+    animation: pulse-glow-optimized 4s ease-in-out infinite alternate; /* Zoptymalizowana animacja */
     z-index: 1;
     pointer-events: none;
     transform: translate(-50%, -50%);
+    will-change: transform, opacity;
 }
 
 /* Navigation Styles - SIMPLIFIED */
@@ -1312,25 +1361,44 @@ nav h1 {
     left: 100%;
 }
 
-/* Hero Section - Disable orbit animations on tablets and mobile */
+/* Hero Section - ZOPTYMALIZOWANE ANIMACJE na tablets i mobile */
 @media (max-width: 1024px) {
-    /* Hide the entire hero solar system on tablets and mobile */
+    /* Ukryj system orbit na tablets/mobile dla wydajności */
     #hero-solar-system {
         display: none !important;
     }
     
-    /* Keep only the sun visible and stationary */
+    /* Słońce statyczne, bez rotacji */
     #hero .sun-container {
         animation: none !important;
+        transform: none !important;
+    }
+    
+    /* Zmniejszona animacja glow dla wydajności */
+    #hero .sun-glow {
+        animation: pulse-glow-mobile 5s ease-in-out infinite alternate !important;
+    }
+    
+    /* Mniejsze słońce na tablets */
+    #hero .sun-container,
+    #hero .sun {
+        width: 180px !important;
+        height: 180px !important;
     }
     
     #hero .sun-glow {
-        animation: pulse-glow 3s ease-in-out infinite alternate !important;
+        width: 180px !important;
+        height: 180px !important;
     }
 }
 
 /* Mobile Responsive Improvements */
 @media (max-width: 768px) {
+    /* WYŁĄCZ GWIAZDY na mobile dla wydajności */
+    .stars-layer-1, .stars-layer-2, .stars-layer-3 {
+        display: none !important;
+    }
+    
     /* Navigation mobile improvements */
     nav .container {
         padding-left: 1rem !important;
@@ -1385,6 +1453,25 @@ nav h1 {
     
     .planet-info {
         order: 2 !important;
+    }
+    
+    /* Sun section mobile - zmniejszone słońce dla wydajności */
+    .planet-visual .sun-container {
+        width: 180px !important;
+        height: 180px !important;
+    }
+    
+    .planet-visual .sun {
+        width: 180px !important;
+        height: 180px !important;
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.4) !important; /* Bardzo mały blur */
+    }
+    
+    .planet-visual .sun-glow {
+        width: 180px !important;
+        height: 180px !important;
+        animation: pulse-glow-mobile 5s ease-in-out infinite alternate !important;
+        opacity: 0.5 !important;
     }
     
     /* Facts grid mobile - 2 rzędy, kompaktowo */
@@ -1566,25 +1653,29 @@ nav h1 {
         font-size: 1rem;
     }
     
-    /* Sun mobile - smaller size and stationary */
+    /* Sun mobile - MAKSYMALNIE ZOPTYMALIZOWANE */
     #hero .sun-container {
-        width: 150px !important;
-        height: 150px !important;
+        width: 120px !important; /* Jeszcze mniejsze dla wydajności */
+        height: 120px !important;
         animation: none !important;
-        margin: 2rem auto !important;
+        margin: 1.5rem auto !important;
+        transform: none !important;
     }
     
     #hero .sun {
-        width: 150px !important;
-        height: 150px !important;
-        animation: none !important; /* No rotation on mobile */
+        width: 120px !important;
+        height: 120px !important;
+        animation: none !important;
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.4) !important; /* Bardzo mały blur */
+        transform: none !important;
     }
     
     #hero .sun-glow {
-        width: 150px !important;
-        height: 150px !important;
+        width: 120px !important;
+        height: 120px !important;
         transform: translate(-50%, -50%) !important;
-        animation: pulse-glow 3s ease-in-out infinite alternate !important;
+        animation: pulse-glow-mobile 6s ease-in-out infinite alternate !important; /* Wolniejsza animacja */
+        opacity: 0.6 !important; /* Zmniejszona intensywność */
     }
     
     /* Hide orbiting planets on mobile - keep only sun */
