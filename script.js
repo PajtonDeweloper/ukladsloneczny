@@ -1,38 +1,49 @@
 // Solar System Interactive Website JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Force scroll to top on page load/refresh
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+    
     // Initialize all functionality
     initScrollAnimations();
     initNavigation();
     initOrbitMap();
-    // initFactsSlider(); // WYŁĄCZONE - slider został zastąpiony kartami
     initParallax();
     initMobileMenu();
     initRealTimePlanets();
-    initCTAButton();
-    initScrollingFacts();
+    initRandomizeFacts(); // Losowa kolejność ciekawostek
     initScrollNavigation();
     initEventUpdates();
 });
 
-// Simple planet orbits with random start positions
+// NOWY SYSTEM PLANET W HERO - losowe pozycje startowe
 function initRealTimePlanets() {
-    // Losowe pozycje startowe dla planet
-    document.querySelectorAll(".orbit-planet").forEach(planet => {
+    console.log('🪐 Inicjalizacja NOWEGO systemu planet w hero sekcji...');
+    
+    // Znajdź wszystkie orbity planet w hero
+    const heroOrbits = document.querySelectorAll("#hero-solar-system .hero-orbit");
+    console.log(`🔍 Znaleziono ${heroOrbits.length} orbit planet w hero sekcji`);
+    
+    heroOrbits.forEach((orbit, index) => {
+        const planetName = orbit.getAttribute('data-planet');
         const randomDeg = Math.floor(Math.random() * 360);
-        // Ustawiamy losowy delay animacji zamiast transform
-        const animationName = window.getComputedStyle(planet).animationName;
-        const animationDuration = window.getComputedStyle(planet).animationDuration;
         
-        if (animationName !== 'none') {
-            // Obliczamy delay na podstawie losowego kąta
-            const durationMs = parseFloat(animationDuration) * 1000;
-            const randomDelay = -(randomDeg / 360) * durationMs;
-            
-            planet.style.animationDelay = `${randomDelay}ms`;
-        }
+        // Pobierz duration z CSS computed styles
+        const computedStyle = window.getComputedStyle(orbit);
+        const duration = computedStyle.animationDuration || '30s';
+        
+        // Oblicz delay na podstawie losowej pozycji
+        const durationMs = parseFloat(duration) * 1000;
+        const randomDelay = -(randomDeg / 360) * durationMs;
+        
+        // Ustaw losowy delay dla orbit
+        orbit.style.animationDelay = `${randomDelay}ms`;
+        
+        console.log(`🪐 ${planetName}: losowa pozycja ${randomDeg}°, delay: ${randomDelay}ms, duration: ${duration}`);
     });
-    console.log('Planet orbits initialized with random start positions');
 }
 
 // Scroll-triggered animations
@@ -65,22 +76,23 @@ function initScrollAnimations() {
 function initNavigation() {
     console.log('🚀 Inicjalizacja nawigacji...');
     
-    // Mapa sekcji z ich offsetami
+    // Mapa sekcji z ich offsetami (uwzględniając fixed navbar)
+    const navbarHeight = 80; // wysokość fixed navbar
     const sectionOffsets = {
         '#hero': 0,
-        '#sun-section': 120,
-        '#planets': 120,
-        '#mercury-section': 200,
-        '#venus-section': 120,
-        '#earth-section': 120,
-        '#mars-section': 120,
-        '#jupiter-section': 120,
-        '#saturn-section': 120,
-        '#uranus-section': 120,
-        '#neptune-section': 120,
-        '#orbit-map': 50,
-        '#events': 50,
-        '#facts': 50
+        '#sun-section': navbarHeight + 40,
+        '#planets': navbarHeight + 40,
+        '#mercury-section': navbarHeight + 40,
+        '#venus-section': navbarHeight + 40,
+        '#earth-section': navbarHeight + 40,
+        '#mars-section': navbarHeight + 40,
+        '#jupiter-section': navbarHeight + 40,
+        '#saturn-section': navbarHeight + 40,
+        '#uranus-section': navbarHeight + 40,
+        '#neptune-section': navbarHeight + 40,
+        '#orbit-map': navbarHeight + 20,
+        '#events': navbarHeight + 20,
+        '#facts': navbarHeight + 20
     };
     
     // Znajdź wszystkie linki nawigacyjne
@@ -89,10 +101,12 @@ function initNavigation() {
     
     // Funkcja do przewijania do sekcji
     function scrollToSection(targetId) {
+        console.log(`🎯 Próba przewinięcia do: ${targetId}`);
         const targetElement = document.querySelector(targetId);
         
         if (!targetElement) {
             console.error(`❌ Nie znaleziono sekcji: ${targetId}`);
+            console.log('📋 Dostępne sekcje:', Array.from(document.querySelectorAll('[id]')).map(el => `#${el.id}`));
             return;
         }
         
@@ -104,15 +118,21 @@ function initNavigation() {
             const elementRect = targetElement.getBoundingClientRect();
             const elementTop = elementRect.top + window.pageYOffset;
             const offset = sectionOffsets[targetId] || 100;
-            scrollPosition = elementTop - offset;
+            scrollPosition = Math.max(0, elementTop - offset);
         }
         
-        console.log(`📍 Przewijam do ${targetId}, pozycja: ${scrollPosition}`);
+        console.log(`📍 Przewijam do ${targetId}, pozycja: ${scrollPosition}, offset: ${sectionOffsets[targetId] || 100}`);
         
-        window.scrollTo({
-            top: scrollPosition,
-            behavior: 'smooth'
-        });
+        // Smooth scroll z fallback
+        if ('scrollBehavior' in document.documentElement.style) {
+            window.scrollTo({
+                top: scrollPosition,
+                behavior: 'smooth'
+            });
+        } else {
+            // Fallback dla starszych przeglądarek
+            window.scrollTo(0, scrollPosition);
+        }
     }
     
     // Funkcja do podświetlania aktywnego linku
@@ -176,31 +196,70 @@ function initNavigation() {
     const startJourneyBtn = document.getElementById('start-journey-btn');
     if (startJourneyBtn) {
         startJourneyBtn.addEventListener('click', () => {
-            scrollToSection('#planets');
+            scrollToSection('#sun-section');
         });
     }
+    
+    // Test - sprawdź czy wszystkie sekcje istnieją
+    console.log('🔍 Sprawdzanie dostępności sekcji:');
+    Object.keys(sectionOffsets).forEach(sectionId => {
+        const element = document.querySelector(sectionId);
+        if (element) {
+            console.log(`✅ ${sectionId} - OK`);
+        } else {
+            console.error(`❌ ${sectionId} - BRAK!`);
+        }
+    });
     
     console.log('✅ Nawigacja zainicjalizowana pomyślnie!');
 }
 
-// Funkcja inicjalizacji przewijających się ciekawostek
-function initScrollingFacts() {
-    const scrollTrack = document.querySelector('.facts-scroll-track');
+// RANDOMIZACJA CIEKAWOSTEK - losowa kolejność przy każdym załadowaniu
+function initRandomizeFacts() {
+    console.log('🎲 Randomizacja kolejności ciekawostek...');
     
-    if (scrollTrack) {
-        // Losowy start - używamy CSS animation-delay
-        const randomDelay = Math.random() * 60; // 0-60 sekund
-        
-        // Ustaw losowy delay i włącz animację
-        scrollTrack.style.animationDelay = `-${randomDelay}s`;
-        scrollTrack.classList.add('animate-scroll-left');
-        
-        console.log(`🎲 Ciekawostki startują z losowego momentu: ${randomDelay.toFixed(1)}s`);
+    const track = document.querySelector('.facts-scroll-track');
+    if (!track) {
+        console.error('❌ Nie znaleziono .facts-scroll-track');
+        return;
     }
+    
+    // Pobierz wszystkie ciekawostki
+    const factItems = Array.from(track.children);
+    if (factItems.length === 0) {
+        console.error('❌ Brak ciekawostek do randomizacji');
+        return;
+    }
+    
+    // Funkcja Fisher-Yates shuffle
+    function shuffleArray(array) {
+        const shuffled = [...array];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+    
+    // Wymieszaj ciekawostki
+    const shuffledFacts = shuffleArray(factItems);
+    
+    // Wyczyść track
+    track.innerHTML = '';
+    
+    // Dodaj z powrotem w nowej kolejności
+    shuffledFacts.forEach((fact, index) => {
+        // Dla mobile (pierwsza ciekawostka) - usuń onclick
+        if (window.innerWidth <= 768 && index === 0) {
+            fact.removeAttribute('onclick');
+            fact.style.cursor = 'default';
+        }
+        track.appendChild(fact);
+    });
+    
+    console.log('✨ Ciekawostki zostały wymieszane!');
+    console.log('🏆 Pierwsza ciekawostka:', shuffledFacts[0].querySelector('h3')?.textContent || 'Nieznana');
 }
-
-// Funkcja rozpraszania ciekawostek - USUNIĘTA
-// Powodowała problemy z losowym wyświetlaniem
 
 // Funkcja automatycznego podświetlania nawigacji podczas scrollowania
 function initScrollNavigation() {
@@ -208,7 +267,7 @@ function initScrollNavigation() {
     let lastScrollTime = 0;
     
     function updateActiveNavOnScroll() {
-        const scrollPosition = window.pageYOffset + 150; // offset dla navbar
+        const scrollPosition = window.pageYOffset + 120; // offset dla navbar
         let currentSection = '#hero'; // domyślnie
         
         // Funkcja do obliczania rzeczywistej pozycji elementu w dokumencie
@@ -245,17 +304,29 @@ function initScrollNavigation() {
             if (section.element) {
                 const sectionTop = getElementTop(section.element);
                 
-                if (scrollPosition >= sectionTop - 100) {
+                if (scrollPosition >= sectionTop - 150) {
                     currentSection = section.id;
                     break;
                 }
             }
         }
         
-        // console.log(`📍 Scroll: ${scrollPosition}, Aktywna sekcja: ${currentSection}`);
+        // Debug: sprawdź czy facts section jest wykrywana
+        if (currentSection === '#facts') {
+            console.log(`📍 Scroll: ${scrollPosition}, Aktywna sekcja: ${currentSection} - FACTS DETECTED!`);
+        }
         
         // Podświetl odpowiedni link
         const navLinks = document.querySelectorAll('.nav-link');
+        const planetsButton = document.querySelector('.nav-link[href="#planets"], .group button.nav-link');
+        
+        // Lista sekcji planet
+        const planetSections = [
+            '#sun-section', '#mercury-section', '#venus-section', 
+            '#earth-section', '#mars-section', '#jupiter-section', 
+            '#saturn-section', '#uranus-section', '#neptune-section'
+        ];
+        
         navLinks.forEach(link => {
             link.classList.remove('nav-active');
             link.classList.add('text-gray-300');
@@ -263,8 +334,25 @@ function initScrollNavigation() {
             if (link.getAttribute('href') === currentSection) {
                 link.classList.remove('text-gray-300');
                 link.classList.add('nav-active');
+                
+                // Debug: sprawdź czy facts link jest podświetlany
+                if (currentSection === '#facts') {
+                    console.log(`✨ Facts navigation link activated!`);
+                }
             }
         });
+        
+        // Podświetl "Planety" jeśli jesteśmy na którejś z planet
+        if (planetsButton) {
+            planetsButton.classList.remove('nav-active');
+            if (planetSections.includes(currentSection)) {
+                planetsButton.classList.remove('text-gray-300');
+                planetsButton.classList.add('nav-active');
+                console.log(`🪐 Planets button activated for section: ${currentSection}`);
+            } else {
+                planetsButton.classList.add('text-gray-300');
+            }
+        }
         
         ticking = false;
     }
@@ -391,163 +479,108 @@ function initEventUpdates() {
     console.log('✅ Automatyczne aktualizacje wydarzeń włączone');
 }
 
-function updateActiveNavLink() {
-    // Funkcja wyłączona - używamy tylko ręcznego podświetlania po kliknięciu
-    // Automatyczne podświetlanie podczas scrollowania jest wyłączone
-    return;
-}
 
-// Interactive orbit map
+// NOWA MAPA ORBIT - rzeczywiste pozycje planet w czasie rzeczywistym
 function initOrbitMap() {
-    const orbitPlanets = document.querySelectorAll('.orbit-planet');
-    const infoPanel = document.getElementById('planet-info-panel');
-    const panelTitle = document.getElementById('panel-title');
-    const panelDescription = document.getElementById('panel-description');
+    console.log('🌌 Inicjalizacja NOWEJ mapy orbit z rzeczywistymi pozycjami...');
     
-    const planetInfo = {
-        mercury: {
-            title: 'Merkury ☿️',
-            description: 'Najbliższa Słońcu planeta. Dzień na Merkurym trwa 176 dni ziemskich, podczas gdy rok to tylko 88 dni! Temperatura waha się od -173°C w nocy do 427°C w dzień.'
-        },
-        venus: {
-            title: 'Wenus ♀️',
-            description: 'Najgorętsza planeta w Układzie Słonecznym z temperaturą powierzchni 462°C. Gęsta atmosfera CO₂ tworzy ekstremalny efekt cieplarniany. Obraca się w przeciwnym kierunku niż większość planet.'
-        },
-        earth: {
-            title: 'Ziemia 🌍',
-            description: 'Jedyna znana planeta z życiem! 71% powierzchni pokrywa woda. Atmosfera chroni nas przed szkodliwym promieniowaniem kosmicznym. Ma jeden naturalny satelitę - Księżyc.'
-        },
-        mars: {
-            title: 'Mars ♂️',
-            description: 'Czerwona planeta z największą górą w Układzie Słonecznym - Olympus Mons (21 km wysokości). Ma dwa małe księżyce: Phobos i Deimos. Naukowcy szukają śladów dawnego życia.'
-        },
-        jupiter: {
-            title: 'Jowisz 🪐',
-            description: 'Największa planeta Układu Słonecznego! Gazowy gigant z Wielką Czerwoną Plamą - burzą większą od Ziemi, trwającą już ponad 400 lat. Ma ponad 80 księżyców, w tym 4 galileuszowe: Io, Europa, Ganimedes i Kallisto.'
-        },
-        saturn: {
-            title: 'Saturn 🪐',
-            description: 'Planeta z najspektakularniejszymi pierścieniami w Układzie Słonecznym! Tak lekka, że mogłaby pływać w wodzie. Ma ponad 80 księżyców, w tym Tytan z gęstą atmosferą i jeziorami metanu.'
-        },
-        uranus: {
-            title: 'Uran 🔵',
-            description: 'Lodowy gigant obracający się "na boku" z nachyleniem osi 98°! Ma słabe pierścienie i 27 księżyców. Pory roku trwają po 21 lat ziemskich. Temperatura może spaść do -224°C.'
-        },
-        neptune: {
-            title: 'Neptun 🔷',
-            description: 'Najdalej od Słońca i najwętrniejsza planeta! Wiatry osiągają prędkość do 2100 km/h - najszybsze w Układzie Słonecznym. Ma 14 księżyców, w tym Tryton krążący wstecz.'
-        }
+    // Dokładne okresy orbitalne planet (w dniach ziemskich)
+    const orbitalPeriods = {
+        mercury: 87.969,
+        venus: 224.701,
+        earth: 365.256,
+        mars: 686.98,
+        jupiter: 4332.59,
+        saturn: 10759.22,
+        uranus: 30688.5,
+        neptune: 60182
     };
     
-    orbitPlanets.forEach(planet => {
-        planet.addEventListener('click', function() {
-            const planetType = this.getAttribute('data-info');
-            const info = planetInfo[planetType];
+    // Pozycje planet na 1 stycznia 2025 (w stopniach od perihel)
+    const initialPositions = {
+        mercury: 45,
+        venus: 180,
+        earth: 100,
+        mars: 270,
+        jupiter: 15,
+        saturn: 320,
+        uranus: 50,
+        neptune: 358
+    };
+    
+    // Data referencyjna (1 stycznia 2025)
+    const referenceDate = new Date('2025-01-01T00:00:00Z');
+    
+    function calculateRealPlanetPosition(planetName) {
+        const now = new Date();
+        const daysSinceReference = (now - referenceDate) / (1000 * 60 * 60 * 24);
+        
+        const period = orbitalPeriods[planetName];
+        const initialPos = initialPositions[planetName];
+        
+        // Oblicz aktualną pozycję kątową
+        const currentAngle = (initialPos + (daysSinceReference / period) * 360) % 360;
+        
+        return currentAngle;
+    }
+    
+    function updateRealPlanetPositions() {
+        console.log('🔄 Aktualizacja rzeczywistych pozycji planet...');
+        
+        // Znajdź wszystkie planety w nowej mapie
+        const planets = document.querySelectorAll('.real-planet');
+        
+        planets.forEach(planet => {
+            const planetName = planet.getAttribute('data-planet');
+            const orbitRadius = parseInt(planet.getAttribute('data-orbit-radius'));
+            const displayName = planet.getAttribute('data-name');
             
-            if (info) {
-                panelTitle.textContent = info.title;
-                panelDescription.textContent = info.description;
-                infoPanel.classList.remove('hidden');
+            if (orbitalPeriods[planetName]) {
+                // Oblicz rzeczywistą pozycję
+                const angle = calculateRealPlanetPosition(planetName);
+                const angleRad = (angle * Math.PI) / 180;
                 
-                // Smooth scroll to panel
-                infoPanel.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'nearest' 
-                });
+                // Oblicz pozycję X, Y na orbicie
+                const x = orbitRadius * Math.cos(angleRad);
+                const y = orbitRadius * Math.sin(angleRad);
                 
-                // Add highlight effect
-                this.style.transform = 'scale(1.3)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 300);
+                // Ustaw pozycję planety
+                planet.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+                
+                console.log(`🪐 ${displayName}: ${angle.toFixed(1)}° (${x.toFixed(1)}, ${y.toFixed(1)})`);
             }
         });
         
-        // Hover effects
-        planet.addEventListener('mouseenter', function() {
-            this.style.transform = 'scale(1.2)';
-            this.style.filter = 'brightness(1.3)';
+        // Aktualizuj datę
+        updateDateTime();
+        
+        // Zaplanuj następną aktualizację za 24 godziny
+        setTimeout(updateRealPlanetPositions, 24 * 60 * 60 * 1000);
+    }
+    
+    function updateDateTime() {
+        const now = new Date();
+        const dateTimeString = now.toLocaleString('pl-PL', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
         });
         
-        planet.addEventListener('mouseleave', function() {
-            this.style.transform = 'scale(1)';
-            this.style.filter = 'brightness(1)';
-        });
-    });
+        const dateElement = document.getElementById('current-date');
+        if (dateElement) {
+            dateElement.textContent = `Aktualna data: ${dateTimeString}`;
+        }
+    }
+    
+    // Rozpocznij aktualizację
+    updateDateTime();
+    updateRealPlanetPositions();
+    
+    console.log('✅ Nowa mapa orbit zainicjalizowana!');
 }
 
-// Facts slider functionality
-function initFactsSlider() {
-    const slides = document.querySelectorAll('.fact-slide');
-    const dots = document.querySelectorAll('.dot');
-    const prevBtn = document.querySelector('.prev-btn');
-    const nextBtn = document.querySelector('.next-btn');
-    
-    let currentSlide = 0;
-    const totalSlides = slides.length;
-    
-    // Update total slides count for new facts
-    console.log(`Total slides: ${totalSlides}`);
-    
-    function showSlide(index) {
-        // Hide all slides
-        slides.forEach(slide => {
-            slide.classList.remove('active');
-        });
-        
-        // Remove active state from all dots
-        dots.forEach(dot => {
-            dot.classList.remove('active');
-        });
-        
-        // Show current slide
-        slides[index].classList.add('active');
-        dots[index].classList.add('active');
-    }
-    
-    function nextSlide() {
-        currentSlide = (currentSlide + 1) % totalSlides;
-        showSlide(currentSlide);
-    }
-    
-    function prevSlide() {
-        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-        showSlide(currentSlide);
-    }
-    
-    // Event listeners
-    nextBtn.addEventListener('click', nextSlide);
-    prevBtn.addEventListener('click', prevSlide);
-    
-    // Dot navigation
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            currentSlide = index;
-            showSlide(currentSlide);
-        });
-    });
-    
-    // Auto-advance slides every 8 seconds (more time for reading longer facts)
-    let autoSlideInterval = setInterval(nextSlide, 8000);
-    
-    // Pause auto-advance on hover
-    const sliderContainer = document.querySelector('.facts-slider');
-    if (sliderContainer) {
-        sliderContainer.addEventListener('mouseenter', () => {
-            clearInterval(autoSlideInterval);
-        });
-        
-        sliderContainer.addEventListener('mouseleave', () => {
-            autoSlideInterval = setInterval(nextSlide, 8000);
-        });
-    }
-    
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') prevSlide();
-        if (e.key === 'ArrowRight') nextSlide();
-    });
-}
 
 // Parallax scrolling effect
 function initParallax() {
@@ -567,65 +600,104 @@ function initParallax() {
 // Mobile menu functionality
 function initMobileMenu() {
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const nav = document.querySelector('nav');
+    const navContainer = document.querySelector('nav .container');
     
-    if (mobileMenuBtn) {
-        mobileMenuBtn.addEventListener('click', () => {
-            // Toggle mobile menu (you can expand this functionality)
-            console.log('Mobile menu clicked');
-        });
-    }
-}
-
-// Hero CTA button functionality
-function initCTAButton() {
-    const ctaButton = document.querySelector('.cta-button');
-    
-    if (ctaButton) {
-        ctaButton.addEventListener('click', function() {
-            // Smooth scroll to planets section
-            const planetsSection = document.getElementById('planets');
-            if (planetsSection) {
-                const offsetTop = planetsSection.offsetTop - 100;
-                window.scrollTo({
-                    top: offsetTop,
-                    behavior: 'smooth'
-                });
+    if (mobileMenuBtn && navContainer) {
+        // Create mobile menu if it doesn't exist
+        let mobileMenu = document.getElementById('mobile-menu');
+        if (!mobileMenu) {
+            mobileMenu = document.createElement('div');
+            mobileMenu.id = 'mobile-menu';
+            mobileMenu.className = 'md:hidden fixed top-20 left-0 right-0 bg-space-dark/95 backdrop-blur-md border-b border-cosmic-purple/30 z-40 transform -translate-y-full opacity-0 transition-all duration-300';
+            
+            mobileMenu.innerHTML = `
+                <div class="px-6 py-4 space-y-3">
+                    <a href="#hero" class="block py-2 text-gray-300 hover:text-cosmic-gold transition-colors">Menu Główne</a>
+                    <div class="border-t border-cosmic-purple/20 pt-3">
+                        <p class="text-cosmic-gold font-semibold mb-2">Planety</p>
+                        <a href="#sun-section" class="block py-1 pl-4 text-gray-300 hover:text-cosmic-gold transition-colors">Słońce</a>
+                        <a href="#mercury-section" class="block py-1 pl-4 text-gray-300 hover:text-cosmic-gold transition-colors">Merkury</a>
+                        <a href="#venus-section" class="block py-1 pl-4 text-gray-300 hover:text-cosmic-gold transition-colors">Wenus</a>
+                        <a href="#earth-section" class="block py-1 pl-4 text-gray-300 hover:text-cosmic-gold transition-colors">Ziemia</a>
+                        <a href="#mars-section" class="block py-1 pl-4 text-gray-300 hover:text-cosmic-gold transition-colors">Mars</a>
+                        <a href="#jupiter-section" class="block py-1 pl-4 text-gray-300 hover:text-cosmic-gold transition-colors">Jowisz</a>
+                        <a href="#saturn-section" class="block py-1 pl-4 text-gray-300 hover:text-cosmic-gold transition-colors">Saturn</a>
+                        <a href="#uranus-section" class="block py-1 pl-4 text-gray-300 hover:text-cosmic-gold transition-colors">Uran</a>
+                        <a href="#neptune-section" class="block py-1 pl-4 text-gray-300 hover:text-cosmic-gold transition-colors">Neptun</a>
+                    </div>
+                    <a href="#orbit-map" class="block py-2 text-gray-300 hover:text-cosmic-gold transition-colors border-t border-cosmic-purple/20 pt-3">Mapa Orbit</a>
+                    <a href="#events" class="block py-2 text-gray-300 hover:text-cosmic-gold transition-colors">Wydarzenia</a>
+                    <a href="#facts" class="block py-2 text-gray-300 hover:text-cosmic-gold transition-colors">Ciekawostki</a>
+                </div>
+            `;
+            
+            document.body.appendChild(mobileMenu);
+        }
+        
+        let isMenuOpen = false;
+        
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            isMenuOpen = !isMenuOpen;
+            
+            if (isMenuOpen) {
+                mobileMenu.classList.remove('-translate-y-full', 'opacity-0');
+                mobileMenu.classList.add('translate-y-0', 'opacity-100');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
+            } else {
+                mobileMenu.classList.add('-translate-y-full', 'opacity-0');
+                mobileMenu.classList.remove('translate-y-0', 'opacity-100');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
             }
         });
+        
+        // Add click handlers to mobile menu links
+        mobileMenu.addEventListener('click', (e) => {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#')) {
+                e.preventDefault();
+                const targetId = e.target.getAttribute('href');
+                
+                // Close mobile menu
+                isMenuOpen = false;
+                mobileMenu.classList.add('-translate-y-full', 'opacity-0');
+                mobileMenu.classList.remove('translate-y-0', 'opacity-100');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                
+                // Scroll to section
+                const scrollToSection = window.scrollToSectionGlobal || function(id) {
+                    const element = document.querySelector(id);
+                    if (element) {
+                        const offset = 120;
+                        const elementTop = element.getBoundingClientRect().top + window.pageYOffset;
+                        window.scrollTo({
+                            top: Math.max(0, elementTop - offset),
+                            behavior: 'smooth'
+                        });
+                    }
+                };
+                
+                scrollToSection(targetId);
+            }
+        });
+        
+        console.log('📱 Mobile menu initialized');
     }
 }
 
-// Planet hover effects enhancement
-function enhancePlanetEffects() {
-    const planets = document.querySelectorAll('.planet');
-    
-    planets.forEach(planet => {
-        planet.addEventListener('mouseenter', function() {
-            // Add glow effect
-            this.style.boxShadow = '0 0 40px rgba(139, 92, 246, 0.8)';
-            this.style.transform = 'scale(1.1) rotate(10deg)';
-        });
-        
-        planet.addEventListener('mouseleave', function() {
-            // Remove glow effect
-            this.style.boxShadow = '';
-            this.style.transform = 'scale(1) rotate(0deg)';
-        });
-    });
-}
+// Hero CTA button functionality - REMOVED (handled by initNavigation)
 
-// Initialize enhanced effects after DOM load
-document.addEventListener('DOMContentLoaded', enhancePlanetEffects);
-
+// Planet hover effects - REMOVED (handled by CSS)
 
 // Add loading animation
 window.addEventListener('load', function() {
     document.body.classList.add('loading');
+    setTimeout(function() {
+        document.body.classList.remove('loading');
+    }, 2000);
+    
+    // Scrolling facts używają statycznej struktury HTML
 });
 
-// Performance optimization: Throttle scroll events - USUNIĘTE
-// Automatyczne podświetlanie nawigacji przy scrollowaniu jest wyłączone
 
 // Add intersection observer for performance
 const observerOptions = {
@@ -689,3 +761,5 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// Removed duplicate initScrollingFacts call - now handled above

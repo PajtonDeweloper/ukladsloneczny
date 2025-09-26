@@ -41,9 +41,9 @@
     <nav class="fixed top-0 left-0 right-0 z-50 bg-space-dark/80 backdrop-blur-md border-b border-cosmic-purple/20">
         <div class="container mx-auto px-6 py-4">
             <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-bold text-cosmic-gold">🌌 Układ Słoneczny</h1>
+                <h1 class="text-2xl font-bold text-cosmic-gold">Układ Słoneczny</h1>
                 <div class="hidden md:flex space-x-3 text-sm">
-                    <a href="#hero" class="nav-link bg-cosmic-gold/10 border border-cosmic-gold/30 rounded-md px-3 py-1" data-planet="home">Menu Główne</a>
+                    <a href="#hero" class="nav-link" data-planet="home">Menu Główne</a>
                     
                     <!-- Planets Dropdown -->
                     <div class="relative group">
@@ -53,7 +53,7 @@
                         </button>
                         <div class="absolute top-full left-0 mt-2 w-48 bg-space-dark/95 backdrop-blur-md border border-cosmic-purple/30 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                             <div class="py-2">
-                                <a href="#sun-section" class="block px-4 py-2 text-cosmic-gold hover:bg-cosmic-gold/10 transition-colors border-b border-cosmic-gold/20">Słońce</a>
+                                <a href="#sun-section" class="block px-4 py-2 hover:bg-cosmic-purple/10 transition-colors">Słońce</a>
                                 <a href="#mercury-section" class="block px-4 py-2 hover:bg-cosmic-purple/10 transition-colors">Merkury</a>
                                 <a href="#venus-section" class="block px-4 py-2 hover:bg-cosmic-purple/10 transition-colors">Wenus</a>
                                 <a href="#earth-section" class="block px-4 py-2 hover:bg-cosmic-purple/10 transition-colors">Ziemia</a>
@@ -79,17 +79,9 @@
 
     <!-- Hero Section - Wizualne Powitanie -->
     <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <!-- Stars Background -->
-        <div class="stars-layer-1"></div>
-        <div class="stars-layer-2"></div>
-        <div class="stars-layer-3"></div>
         
-        <!-- Animated Background Elements -->
+        <!-- Animated Background Elements - REMOVED -->
         <div class="absolute inset-0">
-            <div class="absolute top-20 left-10 w-2 h-2 bg-cosmic-gold rounded-full animate-pulse opacity-60"></div>
-            <div class="absolute top-40 right-20 w-1 h-1 bg-cosmic-purple rounded-full animate-ping opacity-40"></div>
-            <div class="absolute bottom-32 left-1/4 w-3 h-3 bg-cosmic-blue rounded-full animate-bounce opacity-50"></div>
-            <div class="absolute top-1/3 right-1/3 w-2 h-2 bg-cosmic-gold rounded-full animate-pulse opacity-30"></div>
         </div>
         
         <div class="container mx-auto px-6 relative z-10">
@@ -98,21 +90,45 @@
                 <!-- Animated Solar System Icon -->
                 <div class="mb-8 flex justify-center">
                     <div class="relative">
-                        <div class="w-32 h-32 mx-auto mb-6">
+                        <div class="mx-auto mb-6">
                             <div class="sun-container">
                                 <div class="sun"></div>
+                                <div id="hero-solar-system">
+                                    <!-- Mercury orbit -->
+                                    <div class="hero-orbit orbit-mercury" data-planet="mercury">
+                                        <div class="hero-planet mercury bg-gray-400"></div>
+                                    </div>
+                                    <!-- Venus orbit -->
+                                    <div class="hero-orbit orbit-venus" data-planet="venus">
+                                        <div class="hero-planet venus bg-orange-300"></div>
+                                    </div>
+                                    <!-- Earth orbit -->
+                                    <div class="hero-orbit orbit-earth" data-planet="earth">
+                                        <div class="hero-planet earth bg-blue-400"></div>
+                                    </div>
+                                    <!-- Mars orbit -->
+                                    <div class="hero-orbit orbit-mars" data-planet="mars">
+                                        <div class="hero-planet mars bg-red-400"></div>
+                                    </div>
+                                    <!-- Jupiter orbit -->
+                                    <div class="hero-orbit orbit-jupiter" data-planet="jupiter">
+                                        <div class="hero-planet jupiter bg-yellow-600"></div>
+                                    </div>
+                                    <!-- Saturn orbit -->
+                                    <div class="hero-orbit orbit-saturn" data-planet="saturn">
+                                        <div class="hero-planet saturn bg-yellow-400"></div>
+                                    </div>
+                                    <!-- Uranus orbit -->
+                                    <div class="hero-orbit orbit-uranus" data-planet="uranus">
+                                        <div class="hero-planet uranus bg-cyan-400"></div>
+                                    </div>
+                                    <!-- Neptune orbit -->
+                                    <div class="hero-orbit orbit-neptune" data-planet="neptune">
+                                        <div class="hero-planet neptune bg-blue-600"></div>
+                                    </div>
+                                </div>
                                 <div class="sun-glow"></div>
                             </div>
-                        </div>
-                        <!-- Orbiting planets -->
-                        <div class="absolute inset-0 animate-spin" style="animation-duration: 30s;">
-                            <div class="absolute top-0 left-1/2 w-2 h-2 bg-gray-400 rounded-full transform -translate-x-1/2 -translate-y-8"></div>
-                        </div>
-                        <div class="absolute inset-0 animate-spin" style="animation-duration: 45s;">
-                            <div class="absolute top-0 left-1/2 w-3 h-3 bg-orange-400 rounded-full transform -translate-x-1/2 -translate-y-12"></div>
-                        </div>
-                        <div class="absolute inset-0 animate-spin" style="animation-duration: 60s;">
-                            <div class="absolute top-0 left-1/2 w-3 h-3 bg-blue-400 rounded-full transform -translate-x-1/2 -translate-y-16"></div>
                         </div>
                     </div>
                 </div>
@@ -130,27 +146,9 @@
                     w naszym kosmicznym sąsiedztwie.
                 </p>
                 
-                <!-- Feature highlights -->
-                <div class="grid md:grid-cols-3 gap-6 mb-12 max-w-4xl mx-auto">
-                    <div class="bg-gradient-to-br from-cosmic-purple/20 to-space-dark/50 rounded-xl p-6 border border-cosmic-purple/30 backdrop-blur-sm hover:scale-105 transition-transform">
-                        <div class="text-3xl mb-3">🪐</div>
-                        <h3 class="text-lg font-bold text-cosmic-gold mb-2">9 Planet</h3>
-                        <p class="text-sm text-gray-300">Poznaj wszystkie planety od Merkurego do Neptuna</p>
-                    </div>
-                    <div class="bg-gradient-to-br from-cosmic-gold/20 to-space-dark/50 rounded-xl p-6 border border-cosmic-gold/30 backdrop-blur-sm hover:scale-105 transition-transform">
-                        <div class="text-3xl mb-3">🔭</div>
-                        <h3 class="text-lg font-bold text-cosmic-gold mb-2">Wydarzenia</h3>
-                        <p class="text-sm text-gray-300">Śledź nadchodzące zjawiska astronomiczne</p>
-                    </div>
-                    <div class="bg-gradient-to-br from-cosmic-blue/20 to-space-dark/50 rounded-xl p-6 border border-cosmic-blue/30 backdrop-blur-sm hover:scale-105 transition-transform">
-                        <div class="text-3xl mb-3">🌌</div>
-                        <h3 class="text-lg font-bold text-cosmic-gold mb-2">Ciekawostki</h3>
-                        <p class="text-sm text-gray-300">Fascynujące fakty o kosmosie</p>
-                    </div>
-                </div>
                 
                 <!-- CTA Buttons -->
-                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center relative z-[300]">
                     <button class="cta-button bg-gradient-to-r from-cosmic-purple to-cosmic-blue px-8 py-4 rounded-full text-lg font-semibold hover:scale-105 transition-transform duration-300 shadow-lg" id="start-journey-btn">
                         Rozpocznij podróż <i class="fas fa-rocket ml-2"></i>
                     </button>
@@ -161,21 +159,21 @@
             </div>
         </div>
         
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce cursor-pointer" id="scroll-down-btn">
-            <div class="flex flex-col items-center">
-                <i class="fas fa-chevron-down text-cosmic-gold text-2xl hover:text-cosmic-purple transition-colors mb-2"></i>
-                <p class="text-sm text-gray-400">Poznaj Słońce</p>
+    </section>
+    
+    <!-- Section Divider -->
+    <div class="relative py-8">
+        <div class="container mx-auto px-6">
+            <div class="flex items-center justify-center">
+                <div class="flex-1 h-px bg-gradient-to-r from-transparent via-cosmic-gold/50 to-transparent"></div>
+                <div class="mx-6 text-cosmic-gold text-2xl">⭐</div>
+                <div class="flex-1 h-px bg-gradient-to-r from-transparent via-cosmic-gold/50 to-transparent"></div>
             </div>
         </div>
-    </section>
+    </div>
     
     <!-- Sun Section -->
     <section id="sun-section" class="relative py-20">
-        <!-- Stars Background -->
-        <div class="stars-layer-1"></div>
-        <div class="stars-layer-2"></div>
-        <div class="stars-layer-3"></div>
         
         <div class="container mx-auto px-6 relative z-10">
 
@@ -197,30 +195,30 @@
                             Każdą sekundę zamienia 600 milionów ton wodoru w hel, uwalniając energię równą 
                             eksplozji 100 miliardów bomb atomowych!
                         </p>
-                        <div class="facts-grid grid grid-cols-2 gap-4">
+                        <div class="facts-grid grid grid-cols-2">
                             <div class="fact-item">
                                 <span class="text-cosmic-gold font-semibold">Średnica:</span>
-                                <span>1,392,700 km (109x Ziemia)</span>
+                                <span>1,39 mln km</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-gold font-semibold">Masa:</span>
-                                <span>333,000x masa Ziemi</span>
+                                <span>333k x Ziemia</span>
                             </div>
                             <div class="fact-item">
-                                <span class="text-cosmic-gold font-semibold">Temperatura powierzchni:</span>
-                                <span>5,778 K (5,505°C)</span>
+                                <span class="text-cosmic-gold font-semibold">Temp. powierzchni:</span>
+                                <span>5,505°C</span>
                             </div>
                             <div class="fact-item">
-                                <span class="text-cosmic-gold font-semibold">Temperatura jądra:</span>
-                                <span>15 milionów °C</span>
+                                <span class="text-cosmic-gold font-semibold">Temp. jądra:</span>
+                                <span>15 mln °C</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-gold font-semibold">Wiek:</span>
-                                <span>4,6 miliarda lat</span>
+                                <span>4,6 mld lat</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-gold font-semibold">Skład:</span>
-                                <span>73% wodór, 25% hel</span>
+                                <span>73% H, 25% He</span>
                             </div>
                         </div>
                     </div>
@@ -229,7 +227,7 @@
 
             <!-- Sun Fun Facts -->
             <div class="bg-gradient-to-r from-cosmic-gold/10 to-cosmic-purple/10 rounded-xl p-8 border border-cosmic-gold/30 backdrop-blur-sm">
-                <h4 class="text-2xl font-bold mb-6 text-cosmic-gold text-center">🌟 Fascynujące fakty o Słońcu</h4>
+                <h4 class="text-2xl font-bold mb-6 text-cosmic-gold text-center">Fascynujące fakty o Słońcu</h4>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div class="bg-space-dark/50 rounded-lg p-4 border border-cosmic-gold/20">
                         <div class="text-2xl mb-2">⚡</div>
@@ -279,15 +277,19 @@
                 </div>
             </div>
 
-            <!-- Scroll Indicator -->
-            <div class="text-center mt-12">
-                <div class="animate-bounce cursor-pointer inline-block" id="scroll-down-btn">
-                    <i class="fas fa-chevron-down text-cosmic-gold text-2xl hover:text-cosmic-purple transition-colors"></i>
-                    <p class="text-sm text-gray-400 mt-2">Poznaj planety</p>
-                </div>
-            </div>
         </div>
     </section>
+
+    <!-- Section Divider -->
+    <div class="relative py-8">
+        <div class="container mx-auto px-6">
+            <div class="flex items-center justify-center">
+                <div class="flex-1 h-px bg-gradient-to-r from-transparent via-cosmic-purple/50 to-transparent"></div>
+                <div class="mx-6 text-cosmic-purple text-2xl">🪐</div>
+                <div class="flex-1 h-px bg-gradient-to-r from-transparent via-cosmic-purple/50 to-transparent"></div>
+            </div>
+        </div>
+    </div>
 
     <!-- Planets Section -->
     <section id="planets" class="relative py-20">
@@ -316,25 +318,25 @@
                                 Brak atmosfery oznacza brak ochrony przed meteoryty - powierzchnia pokryta jest kraterami.
                             </p>
                         </div>
-                        <div class="facts-grid grid grid-cols-2 gap-4">
+                        <div class="facts-grid grid grid-cols-2">
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Średnica:</span>
-                                <span>4,879 km (38% Ziemi)</span>
+                                <span>4,879 km</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Rok:</span>
-                                <span>88 dni ziemskich</span>
+                                <span>88 dni</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Dzień:</span>
-                                <span>176 dni ziemskich</span>
+                                <span>176 dni</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Księżyce:</span>
                                 <span>0</span>
                             </div>
                             <div class="fact-item">
-                                <span class="text-cosmic-purple font-semibold">Odległość od Słońca:</span>
+                                <span class="text-cosmic-purple font-semibold">Odległość:</span>
                                 <span>58 mln km</span>
                             </div>
                             <div class="fact-item">
@@ -363,18 +365,18 @@
                                 Pada tam kwasem siarkowym, a wiatry osiągają 360 km/h. Obraca się wstecz - Słońce wschodzi na zachodzie.
                             </p>
                         </div>
-                        <div class="facts-grid grid grid-cols-2 gap-4">
+                        <div class="facts-grid grid grid-cols-2">
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Średnica:</span>
-                                <span>12,104 km (95% Ziemi)</span>
+                                <span>12,104 km</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Rok:</span>
-                                <span>225 dni ziemskich</span>
+                                <span>225 dni</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Dzień:</span>
-                                <span>243 dni ziemskich</span>
+                                <span>243 dni</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Temperatura:</span>
@@ -382,11 +384,11 @@
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Ciśnienie:</span>
-                                <span>90x większe niż na Ziemi</span>
+                                <span>90x większe</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Jasność:</span>
-                                <span>3. najjaśniejszy obiekt na niebie</span>
+                                <span>3. najjaśniejszy</span>
                             </div>
                         </div>
                     </div>
@@ -422,7 +424,7 @@
                                 co daje nam regularne pory roku i pływy oceaniczne.
                             </p>
                         </div>
-                        <div class="facts-grid grid grid-cols-2 gap-4">
+                        <div class="facts-grid grid grid-cols-2">
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Średnica:</span>
                                 <span>12,756 km</span>
@@ -469,14 +471,14 @@
                                 Burze piaskowe mogą trwać miesiącami i pokrywać całą planetę.
                             </p>
                         </div>
-                        <div class="facts-grid grid grid-cols-2 gap-4">
+                        <div class="facts-grid grid grid-cols-2">
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Średnica:</span>
-                                <span>6,792 km (53% Ziemi)</span>
+                                <span>6,792 km</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Rok:</span>
-                                <span>687 dni ziemskich</span>
+                                <span>687 dni</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Księżyce:</span>
@@ -499,6 +501,10 @@
                     <div class="planet-visual order-1 md:order-2">
                         <div class="planet-orbit">
                             <div class="planet mars"></div>
+                            <div class="mars-moons">
+                                <div class="moon phobos"></div>
+                                <div class="moon deimos"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -533,22 +539,22 @@
                                 Europa i Ganimedes mogą mieć oceany pod lodową skorupą!
                             </p>
                         </div>
-                        <div class="facts-grid grid grid-cols-2 gap-4">
+                        <div class="facts-grid grid grid-cols-2">
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Średnica:</span>
-                                <span>142,984 km (11x Ziemia)</span>
+                                <span>142,984 km</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Rok:</span>
-                                <span>12 lat ziemskich</span>
+                                <span>12 lat</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Księżyce:</span>
-                                <span>80+ (Io, Europa, Ganimedes, Kallisto)</span>
+                                <span>80+ (Io, Europa, Ganimedes)</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Masa:</span>
-                                <span>2.5x więcej niż wszystkie planety razem</span>
+                                <span>2.5x wszystkich planet</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Dzień:</span>
@@ -581,26 +587,26 @@
                                 może tam być życie!
                             </p>
                         </div>
-                        <div class="facts-grid grid grid-cols-2 gap-4">
+                        <div class="facts-grid grid grid-cols-2">
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Średnica:</span>
-                                <span>120,536 km (9x Ziemia)</span>
+                                <span>120,536 km</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Rok:</span>
-                                <span>29 lat ziemskich</span>
+                                <span>29 lat</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Pierścienie:</span>
-                                <span>Tysiące pierścieni z lodu i skał</span>
+                                <span>Tysiące pierścieni</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Gęstość:</span>
-                                <span>0.69 g/cm³ (mniejsza niż woda!)</span>
+                                <span>0.69 g/cm³</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Księżyce:</span>
-                                <span>83 (Tytan, Enceladus, Mimas)</span>
+                                <span>83 (Tytan, Enceladus)</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Wiatry:</span>
@@ -612,6 +618,10 @@
                         <div class="planet-orbit">
                             <div class="planet saturn">
                                 <div class="saturn-rings"></div>
+                            </div>
+                            <div class="saturn-moons">
+                                <div class="moon titan"></div>
+                                <div class="moon enceladus"></div>
                             </div>
                         </div>
                     </div>
@@ -625,6 +635,10 @@
                         <div class="planet-orbit">
                             <div class="planet uranus">
                                 <div class="uranus-rings"></div>
+                            </div>
+                            <div class="uranus-moons">
+                                <div class="moon miranda"></div>
+                                <div class="moon ariel"></div>
                             </div>
                         </div>
                     </div>
@@ -644,18 +658,18 @@
                                 który nadaje mu niebieskawy kolor.
                             </p>
                         </div>
-                        <div class="facts-grid grid grid-cols-2 gap-4">
+                        <div class="facts-grid grid grid-cols-2">
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Średnica:</span>
-                                <span>51,118 km (4x Ziemia)</span>
+                                <span>51,118 km</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Rok:</span>
-                                <span>84 lata ziemskie</span>
+                                <span>84 lata</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Księżyce:</span>
-                                <span>27 (Titania, Oberon, Ariel)</span>
+                                <span>27 (Titania, Oberon)</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Składnik:</span>
@@ -692,14 +706,14 @@
                                 które "padają" w kierunku jądra. Tryton to prawdopodobnie schwytany obiekt z Pasa Kuipera.
                             </p>
                         </div>
-                        <div class="facts-grid grid grid-cols-2 gap-4">
+                        <div class="facts-grid grid grid-cols-2">
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Średnica:</span>
-                                <span>49,528 km (4x Ziemia)</span>
+                                <span>49,528 km</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Rok:</span>
-                                <span>165 lat ziemskich</span>
+                                <span>165 lat</span>
                             </div>
                             <div class="fact-item">
                                 <span class="text-cosmic-purple font-semibold">Wiatry:</span>
@@ -722,6 +736,9 @@
                     <div class="planet-visual order-1 md:order-2">
                         <div class="planet-orbit">
                             <div class="planet neptune"></div>
+                            <div class="neptune-moons">
+                                <div class="moon triton"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -729,55 +746,94 @@
         </div>
     </section>
 
+    <!-- Section Divider -->
+    <div class="relative py-8">
+        <div class="container mx-auto px-6">
+            <div class="flex items-center justify-center">
+                <div class="flex-1 h-px bg-gradient-to-r from-transparent via-cosmic-blue/50 to-transparent"></div>
+                <div class="mx-6 text-cosmic-blue text-2xl">🌌</div>
+                <div class="flex-1 h-px bg-gradient-to-r from-transparent via-cosmic-blue/50 to-transparent"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Interactive Orbit Map -->
     <section id="orbit-map" class="relative py-20">
-        <!-- Stars Background -->
-        <div class="stars-layer-1"></div>
-        <div class="stars-layer-2"></div>
-        <div class="stars-layer-3"></div>
         
         <div class="container mx-auto px-6 relative z-10">
-            <h2 class="text-5xl font-bold text-center mb-16 text-cosmic-gold">Interaktywna Mapa Orbit</h2>
+            <h2 class="text-5xl font-bold text-center mb-16 text-cosmic-gold">Realne Położenie Planet</h2>
             
-            <div class="orbit-system relative max-w-4xl mx-auto">
-                <div class="sun-center"></div>
+            <!-- NOWA MAPA ORBIT - rzeczywiste pozycje planet -->
+            <div id="real-orbit-map" class="relative max-w-6xl mx-auto bg-gradient-to-br from-space-dark/30 to-cosmic-purple/10 rounded-2xl p-12 border border-cosmic-gold/20">
+                <!-- Słońce w centrum -->
+                <div id="central-sun" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-gradient-to-br from-yellow-300 to-orange-500 rounded-full shadow-lg z-20">
+                    <div class="absolute inset-0 bg-gradient-to-br from-yellow-200/50 to-transparent rounded-full animate-pulse"></div>
+                </div>
                 
-                <!-- Orbit Lines -->
-                <div class="orbit-line orbit-1"></div>
-                <div class="orbit-line orbit-2"></div>
-                <div class="orbit-line orbit-3"></div>
-                <div class="orbit-line orbit-4"></div>
-                <div class="orbit-line orbit-5"></div>
-                <div class="orbit-line orbit-6"></div>
-                <div class="orbit-line orbit-7"></div>
-                <div class="orbit-line orbit-8"></div>
+                <!-- Orbity planet (linie) - równomierne odstępy 50px -->
+                <div class="orbit-ring mercury-ring absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border border-cosmic-gold/30 rounded-full" style="width: 120px; height: 120px;"></div>
+                <div class="orbit-ring venus-ring absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border border-cosmic-gold/30 rounded-full" style="width: 170px; height: 170px;"></div>
+                <div class="orbit-ring earth-ring absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border border-cosmic-gold/30 rounded-full" style="width: 220px; height: 220px;"></div>
+                <div class="orbit-ring mars-ring absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border border-cosmic-gold/30 rounded-full" style="width: 270px; height: 270px;"></div>
+                <div class="orbit-ring jupiter-ring absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border border-cosmic-gold/30 rounded-full" style="width: 320px; height: 320px;"></div>
+                <div class="orbit-ring saturn-ring absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border border-cosmic-gold/30 rounded-full" style="width: 370px; height: 370px;"></div>
+                <div class="orbit-ring uranus-ring absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border border-cosmic-gold/30 rounded-full" style="width: 420px; height: 420px;"></div>
+                <div class="orbit-ring neptune-ring absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border border-cosmic-gold/30 rounded-full" style="width: 470px; height: 470px;"></div>
                 
-                <!-- Interactive Planets -->
-                <div class="orbit-planet mercury-orbit orbit-1" data-info="mercury">
-                    <div class="mini-planet mercury-mini"></div>
-                </div>
-                <div class="orbit-planet venus-orbit orbit-2" data-info="venus">
-                    <div class="mini-planet venus-mini"></div>
-                </div>
-                <div class="orbit-planet earth-orbit orbit-3" data-info="earth">
-                    <div class="mini-planet earth-mini"></div>
-                </div>
-                <div class="orbit-planet mars-orbit orbit-4" data-info="mars">
-                    <div class="mini-planet mars-mini"></div>
-                </div>
-                <div class="orbit-planet jupiter-orbit orbit-5" data-info="jupiter">
-                    <div class="mini-planet jupiter-mini"></div>
-                </div>
-                <div class="orbit-planet saturn-orbit orbit-6" data-info="saturn">
-                    <div class="mini-planet saturn-mini">
-                        <div class="mini-saturn-rings"></div>
+                <!-- Planety - pozycje będą ustawiane przez JavaScript -->
+                <div id="planet-mercury" class="real-planet" data-planet="mercury" data-orbit-radius="60" data-name="Merkury">
+                    <div class="planet-dot bg-gray-400 w-3 h-3 rounded-full"></div>
+                    <div class="planet-label-frame">
+                        <span class="planet-label">Merkury</span>
                     </div>
                 </div>
-                <div class="orbit-planet uranus-orbit orbit-7" data-info="uranus">
-                    <div class="mini-planet uranus-mini"></div>
+                <div id="planet-venus" class="real-planet" data-planet="venus" data-orbit-radius="85" data-name="Wenus">
+                    <div class="planet-dot bg-orange-300 w-3 h-3 rounded-full"></div>
+                    <div class="planet-label-frame">
+                        <span class="planet-label">Wenus</span>
+                    </div>
                 </div>
-                <div class="orbit-planet neptune-orbit orbit-8" data-info="neptune">
-                    <div class="mini-planet neptune-mini"></div>
+                <div id="planet-earth" class="real-planet" data-planet="earth" data-orbit-radius="110" data-name="Ziemia">
+                    <div class="planet-dot bg-blue-400 w-4 h-4 rounded-full"></div>
+                    <div class="planet-label-frame">
+                        <span class="planet-label">Ziemia</span>
+                    </div>
+                </div>
+                <div id="planet-mars" class="real-planet" data-planet="mars" data-orbit-radius="135" data-name="Mars">
+                    <div class="planet-dot bg-red-400 w-3 h-3 rounded-full"></div>
+                    <div class="planet-label-frame">
+                        <span class="planet-label">Mars</span>
+                    </div>
+                </div>
+                <div id="planet-jupiter" class="real-planet" data-planet="jupiter" data-orbit-radius="160" data-name="Jowisz">
+                    <div class="planet-dot bg-yellow-600 w-6 h-6 rounded-full"></div>
+                    <div class="planet-label-frame">
+                        <span class="planet-label">Jowisz</span>
+                    </div>
+                </div>
+                <div id="planet-saturn" class="real-planet" data-planet="saturn" data-orbit-radius="185" data-name="Saturn">
+                    <div class="planet-dot bg-yellow-400 w-5 h-5 rounded-full"></div>
+                    <div class="planet-label-frame">
+                        <span class="planet-label">Saturn</span>
+                    </div>
+                </div>
+                <div id="planet-uranus" class="real-planet" data-planet="uranus" data-orbit-radius="210" data-name="Uran">
+                    <div class="planet-dot bg-cyan-400 w-4 h-4 rounded-full"></div>
+                    <div class="planet-label-frame">
+                        <span class="planet-label">Uran</span>
+                    </div>
+                </div>
+                <div id="planet-neptune" class="real-planet" data-planet="neptune" data-orbit-radius="235" data-name="Neptun">
+                    <div class="planet-dot bg-blue-600 w-4 h-4 rounded-full"></div>
+                    <div class="planet-label-frame">
+                        <span class="planet-label">Neptun</span>
+                    </div>
+                </div>
+                
+                <!-- Informacja o dacie -->
+                <div class="absolute bottom-4 right-4 text-sm text-cosmic-gold/80 bg-space-dark/50 px-3 py-2 rounded-lg">
+                    <div id="current-date">Aktualna data: Ładowanie...</div>
+                    <div class="text-xs text-gray-400 mt-1">Pozycje aktualizowane raz na dzień</div>
                 </div>
             </div>
 
@@ -789,31 +845,56 @@
         </div>
     </section>
 
+    <!-- Section Divider -->
+    <div class="relative py-8">
+        <div class="container mx-auto px-6">
+            <div class="flex items-center justify-center">
+                <div class="flex-1 h-px bg-gradient-to-r from-transparent via-cosmic-gold/50 to-transparent"></div>
+                <div class="mx-6 text-cosmic-gold text-2xl">🔭</div>
+                <div class="flex-1 h-px bg-gradient-to-r from-transparent via-cosmic-gold/50 to-transparent"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Upcoming Events Section -->
     <section id="events" class="relative py-20">
-        <!-- Stars Background -->
-        <div class="stars-layer-1"></div>
-        <div class="stars-layer-2"></div>
-        <div class="stars-layer-3"></div>
         
         <div class="container mx-auto px-6 relative z-10">
-            <h2 class="text-5xl font-bold text-center mb-4 text-cosmic-gold">🔭 Nadchodzące Wydarzenia</h2>
+            <h2 class="text-5xl font-bold text-center mb-4 text-cosmic-gold">Nadchodzące Wydarzenia</h2>
             <p class="text-center text-gray-300 mb-16 text-lg max-w-3xl mx-auto">
                 Nie przegap spektakularnych zjawisk astronomicznych! Sprawdź, co warto obserwować na niebie w najbliższym czasie.
             </p>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-                <!-- Event 1: Meteor Shower -->
-                <div class="event-card bg-gradient-to-br from-cosmic-purple/30 to-space-dark/70 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm hover:scale-105 transition-all duration-300 hover:border-cosmic-gold/80" data-date="2024-12-13">
+                <!-- Event 1: Jupiter Opposition -->
+                <div class="event-card bg-gradient-to-br from-cosmic-purple/30 to-space-dark/70 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm hover:scale-105 transition-all duration-300 hover:border-cosmic-gold/80" data-date="2025-12-07">
+                    <div class="flex items-center mb-4">
+                        <div class="text-4xl mr-4">🪐</div>
+                        <div>
+                            <h3 class="text-xl font-bold text-cosmic-gold">Opozycja Jowisza</h3>
+                            <p class="text-sm text-cosmic-blue">7 grudnia 2025</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 text-sm mb-4">
+                        Jowisz w najlepszej pozycji do obserwacji! Widoczne będą jego księżyce i Wielka Czerwona Plama.
+                    </p>
+                    <div class="flex items-center text-xs text-gray-400">
+                        <span class="bg-cosmic-gold/30 px-2 py-1 rounded mr-2">Całą noc</span>
+                        <span class="bg-cosmic-purple/30 px-2 py-1 rounded">Teleskop polecany</span>
+                    </div>
+                </div>
+
+                <!-- Event 2: Geminids Meteor Shower -->
+                <div class="event-card bg-gradient-to-br from-cosmic-purple/30 to-space-dark/70 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm hover:scale-105 transition-all duration-300 hover:border-cosmic-gold/80" data-date="2025-12-14">
                     <div class="flex items-center mb-4">
                         <div class="text-4xl mr-4">☄️</div>
                         <div>
                             <h3 class="text-xl font-bold text-cosmic-gold">Deszcz Meteorów Geminidów</h3>
-                            <p class="text-sm text-cosmic-blue">13-14 grudnia 2024</p>
+                            <p class="text-sm text-cosmic-blue">14 grudnia 2025</p>
                         </div>
                     </div>
                     <p class="text-gray-300 text-sm mb-4">
-                        Jeden z najlepszych deszczów meteorów w roku! Do 120 meteorów na godzinę. Najlepszy czas obserwacji: 2:00-4:00 w nocy.
+                        Najlepszy deszcz meteorów roku! Do 120 meteorów na godzinę. Najlepszy czas obserwacji: od 22:00 do 4:00.
                     </p>
                     <div class="flex items-center text-xs text-gray-400">
                         <span class="bg-cosmic-purple/30 px-2 py-1 rounded mr-2">Widoczny gołym okiem</span>
@@ -821,39 +902,21 @@
                     </div>
                 </div>
 
-                <!-- Event 2: Planetary Conjunction -->
-                <div class="event-card bg-gradient-to-br from-cosmic-purple/30 to-space-dark/70 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm hover:scale-105 transition-all duration-300 hover:border-cosmic-gold/80" data-date="2025-08-30">
+                <!-- Event 3: Venus-Jupiter Conjunction -->
+                <div class="event-card bg-gradient-to-br from-cosmic-purple/30 to-space-dark/70 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm hover:scale-105 transition-all duration-300 hover:border-cosmic-gold/80" data-date="2026-01-12">
                     <div class="flex items-center mb-4">
                         <div class="text-4xl mr-4">🪐</div>
                         <div>
                             <h3 class="text-xl font-bold text-cosmic-gold">Koniunkcja Wenus i Jowisza</h3>
-                            <p class="text-sm text-cosmic-blue">30 sierpnia 2025</p>
+                            <p class="text-sm text-cosmic-blue">12 stycznia 2026</p>
                         </div>
                     </div>
                     <p class="text-gray-300 text-sm mb-4">
-                        Wenus i Jowisz będą bardzo blisko siebie na niebie! Spektakularne zjawisko tuż po zachodzie słońca na zachodnim horyzoncie.
+                        Wenus i Jowisz będą bardzo blisko siebie na niebie! Spektakularne zjawisko tuż po zachodzie słońca.
                     </p>
                     <div class="flex items-center text-xs text-gray-400">
                         <span class="bg-cosmic-gold/30 px-2 py-1 rounded mr-2">Zachód słońca</span>
-                        <span class="bg-cosmic-purple/30 px-2 py-1 rounded">Lornetka polecana</span>
-                    </div>
-                </div>
-
-                <!-- Event 3: Lunar Eclipse -->
-                <div class="event-card bg-gradient-to-br from-cosmic-purple/30 to-space-dark/70 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm hover:scale-105 transition-all duration-300 hover:border-cosmic-gold/80" data-date="2025-09-07">
-                    <div class="flex items-center mb-4">
-                        <div class="text-4xl mr-4">🌙</div>
-                        <div>
-                            <h3 class="text-xl font-bold text-cosmic-gold">Zaćmienie Księżyca</h3>
-                            <p class="text-sm text-cosmic-blue">7 września 2025</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-300 text-sm mb-4">
-                        Częściowe zaćmienie Księżyca widoczne z Polski. Księżyc nabierze czerwonawo-pomarańczowego koloru.
-                    </p>
-                    <div class="flex items-center text-xs text-gray-400">
-                        <span class="bg-cosmic-blue/30 px-2 py-1 rounded mr-2">Wieczór</span>
-                        <span class="bg-cosmic-gold/30 px-2 py-1 rounded">Bezpieczne</span>
+                        <span class="bg-cosmic-purple/30 px-2 py-1 rounded">Widoczne gołym okiem</span>
                     </div>
                 </div>
 
@@ -915,18 +978,18 @@
             <!-- Call to Action -->
             <div class="mt-16 text-center">
                 <div class="bg-gradient-to-r from-cosmic-purple/20 to-cosmic-gold/20 rounded-xl p-8 border border-cosmic-gold/30 backdrop-blur-sm max-w-4xl mx-auto">
-                    <h3 class="text-2xl font-bold mb-4 text-cosmic-gold">🌟 Nie przegap żadnego wydarzenia!</h3>
+                    <h3 class="text-2xl font-bold mb-4 text-cosmic-gold">Nie przegap żadnego wydarzenia!</h3>
                     <p class="text-gray-300 mb-6">
                         Pobierz aplikacje do śledzenia wydarzeń astronomicznych lub sprawdź lokalne kluby astronomiczne w Twojej okolicy.
                     </p>
                     <div class="flex flex-wrap justify-center gap-4">
-                        <a href="https://www.timeanddate.com/astronomy/" target="_blank" class="bg-cosmic-blue hover:bg-cosmic-purple px-6 py-3 rounded-full text-white font-semibold transition-all duration-300 hover:scale-105">
+                        <a href="https://www.timeanddate.com/astronomy/" target="_blank" class="cta-link bg-gradient-to-r from-cosmic-blue to-cosmic-purple px-6 py-3 rounded-full text-white font-semibold transition-all duration-300 hover:scale-105">
                             📅 Kalendarz Astronomiczny
                         </a>
-                        <a href="https://spotthestation.nasa.gov/" target="_blank" class="bg-cosmic-purple hover:bg-cosmic-gold px-6 py-3 rounded-full text-white font-semibold transition-all duration-300 hover:scale-105">
+                        <a href="https://spotthestation.nasa.gov/" target="_blank" class="cta-link bg-gradient-to-r from-cosmic-purple to-cosmic-gold px-6 py-3 rounded-full text-white font-semibold transition-all duration-300 hover:scale-105">
                             🛰️ Śledź ISS
                         </a>
-                        <a href="https://www.heavens-above.com/" target="_blank" class="bg-cosmic-gold hover:bg-cosmic-blue px-6 py-3 rounded-full text-white font-semibold transition-all duration-300 hover:scale-105">
+                        <a href="https://www.heavens-above.com/" target="_blank" class="cta-link bg-gradient-to-r from-cosmic-gold to-cosmic-blue px-6 py-3 rounded-full text-white font-semibold transition-all duration-300 hover:scale-105">
                             🔭 Heavens Above
                         </a>
                     </div>
@@ -935,196 +998,307 @@
         </div>
     </section>
 
+    <!-- Section Divider -->
+    <div class="relative py-8">
+        <div class="container mx-auto px-6">
+            <div class="flex items-center justify-center">
+                <div class="flex-1 h-px bg-gradient-to-r from-transparent via-cosmic-purple/50 to-transparent"></div>
+                <div class="mx-6 text-cosmic-purple text-2xl">✨</div>
+                <div class="flex-1 h-px bg-gradient-to-r from-transparent via-cosmic-purple/50 to-transparent"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Did You Know Section -->
     <section id="facts" class="relative py-20 overflow-hidden">
-        <!-- Stars Background -->
-        <div class="stars-layer-1"></div>
-        <div class="stars-layer-2"></div>
-        <div class="stars-layer-3"></div>
         
         <div class="container mx-auto px-6 relative z-10">
-            <h2 class="text-5xl font-bold text-center mb-16 text-cosmic-gold">🌌 Kosmiczne Tajemnice</h2>
+            <h2 class="text-5xl font-bold text-center mb-16 text-cosmic-gold">Kosmiczne Tajemnice</h2>
             
             <!-- Scrolling Facts Container -->
             <div class="facts-scroll-container relative">
-                <div class="facts-scroll-track flex gap-8">
-                    <!-- First set of facts -->
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">🪐</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Wenus obraca się wstecz</h3>
-                            <p class="text-sm text-gray-300">Tam Słońce wschodzi na zachodzie i zachodzi na wschodzie!</p>
+                <div class="facts-scroll-track">
+                    <!-- NOWE CIEKAWOSTKI Z PEŁNĄ TREŚCIĄ -->
+                    <!-- Ciekawostka 1 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">🌡️</div>
+                                <div class="text-lg font-bold">Ekstremalne temperatury</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Ekstremalne temperatury</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">Merkury ma najekstremalniejsze wahania temperatury - od +430°C w dzień do -180°C w nocy! Ta różnica 610°C wynika z braku atmosfery, która mogłaby zatrzymać ciepło.</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">⏰</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Doba dłuższa niż rok</h3>
-                            <p class="text-sm text-gray-300">Na Wenus doba trwa 243 dni ziemskie, a rok tylko 225!</p>
+                    <!-- Ciekawostka 2 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">🪐</div>
+                                <div class="text-lg font-bold">Wenus obraca się wstecz</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Wenus obraca się wstecz</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">Wenus to jedyna planeta obracająca się wstecz! Słońce wschodzi tam na zachodzie i zachodzi na wschodzie. Prawdopodobnie spowodowała to dawna kolizja z asteroidą.</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">💎</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Diamentowe deszcze</h3>
-                            <p class="text-sm text-gray-300">Na Jowiszu i Saturnie mogą padać deszcze z diamentów!</p>
+                    <!-- Ciekawostka 3 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">💎</div>
+                                <div class="text-lg font-bold">Diamentowe deszcze</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Diamentowe deszcze</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">Na Jowiszu i Saturnie padać mogą deszcze z prawdziwych diamentów! Ekstremalne ciśnienie krystalizuje węgiel w diamenty wielkości kilkunastu centymetrów, które opadają przez gęstą atmosferę.</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">🏔️</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Olympus Mons</h3>
-                            <p class="text-sm text-gray-300">Najwyższy wulkan w Układzie Słonecznym - 3x wyższy niż Everest!</p>
+                    <!-- Ciekawostka 4 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">🏔️</div>
+                                <div class="text-lg font-bold">Olympus Mons</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Olympus Mons</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">Najwyższy wulkan w Układzie Słonecznym na Marsie - 21 km wysokości (3x wyższy od Everestu!) i 600 km średnicy. Mógłby pokryć całą Francję!</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">🌊</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Gejzery Enceladusa</h3>
-                            <p class="text-sm text-gray-300">Księżyc Saturna wyrzuca gejzery lodowej wody z ukrytego oceanu!</p>
+                    <!-- Ciekawostka 5 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">💨</div>
+                                <div class="text-lg font-bold">Wiatry Neptuna</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Wiatry Neptuna</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">Najdalsza planeta ma najsilniejsze wiatry - do 2100 km/h (2x szybciej od dźwięku)! Paradoks: otrzymuje 1000x mniej energii słonecznej niż Ziemia.</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">💨</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Wiatry Neptuna</h3>
-                            <p class="text-sm text-gray-300">Najsilniejsze wiatry w Układzie - do 2100 km/h!</p>
+                    <!-- Ciekawostka 6 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">🌍</div>
+                                <div class="text-lg font-bold">Ziemia nie jest okrągła</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Ziemia nie jest okrągła</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">Ziemia to spłaszczona sfera - na biegunach jest 21 km "płatsza" niż na równiku przez rotację. Ta forma nazywa się geoida.</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">🌧️</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Metanowe deszcze</h3>
-                            <p class="text-sm text-gray-300">Na Tytanie padają deszcze z ciekłego metanu!</p>
+                    <!-- Ciekawostka 7 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">✨</div>
+                                <div class="text-lg font-bold">Gwiazdy w dziennym niebie</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Gwiazdy w dziennym niebie</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">Gwiazdy są widoczne w dzien - Słońce po prostu je przyciemnia. W głębokich studniach lub podczas zacięć można je zobaczyć!</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">🌡️</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Ekstremalne temperatury</h3>
-                            <p class="text-sm text-gray-300">Merkury: +430°C w dzień, -180°C w nocy - brak atmosfery!</p>
+                    <!-- Ciekawostka 8 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">🌙</div>
+                                <div class="text-lg font-bold">Księżyc odpływa</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Księżyc odpływa</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">Księżyc oddala się od Ziemi o 4cm rocznie. Za miliardy lat dzień będzie trwać 47 obecnych godzin!</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">🔄</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Uran na boku</h3>
-                            <p class="text-sm text-gray-300">Oś obrotu przechylona o 98° - planeta "leży na boku"!</p>
+                    <!-- Ciekawostka 9 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">☀️</div>
+                                <div class="text-lg font-bold">Słońce to plazma</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Słońce to plazma</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">Słońce nie jest gazem ani ciałem stałym - to piąty stan materii zwany plazmą. Temperatura jądra: 15 milionów stopni!</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">🌙</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Uciekający Księżyc</h3>
-                            <p class="text-sm text-gray-300">Księżyc oddala się od Ziemi o 3,8 cm rocznie!</p>
+                    <!-- Ciekawostka 10 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">🪐</div>
+                                <div class="text-lg font-bold">Rok na Wenus</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Rok na Wenus</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">Na Wenus dzień trwa dłużej niż rok! Jeden dzień = 243 dni ziemskie, rok = 225 dni ziemskich.</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">⭐</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Gwiazda neutronowa</h3>
-                            <p class="text-sm text-gray-300">20 km średnicy, ale waży więcej niż Słońce!</p>
+                    <!-- Ciekawostka 11 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">⚡</div>
+                                <div class="text-lg font-bold">Błyskawice na Jowiszu</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Błyskawice na Jowiszu</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">Jowisz ma błyskawice 1000x silniejsze od ziemskich! Jego burze trwają wieki - Wielka Czerwona Plama to huragan większy od Ziemi.</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">🌟</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Hiperolbrzymy</h3>
-                            <p class="text-sm text-gray-300">Największe gwiazdy sięgałyby poza orbitę Jowisza!</p>
+                    <!-- Ciekawostka 12 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">🌊</div>
+                                <div class="text-lg font-bold">Oceany na Europa</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Oceany na Europa</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">Księżyc Europa ma 2x więcej wody niż wszystkie oceany Ziemi! Pod lodową skorupą kryje się ocean głęboki na 100km.</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">🌀</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Szybkie gwiazdy</h3>
-                            <p class="text-sm text-gray-300">Niektóre gwiazdy obracają się tak szybko, że dzień trwa kilkadziesiąt minut!</p>
+                    <!-- Ciekawostka 13 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">🛐</div>
+                                <div class="text-lg font-bold">Lata świetlne</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Lata świetlne</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">Rok świetlny to 9,5 biliona km! Światło z najbliższej gwiazdy (Proxima) dociera do nas 4,2 roku.</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">🔦</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Kosmiczne latarnie</h3>
-                            <p class="text-sm text-gray-300">Pulsary emitują fale radiowe jak regularnie błyskające latarnie!</p>
+                    <!-- Ciekawostka 14 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">🌌</div>
+                                <div class="text-lg font-bold">Droga Mleczna</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Droga Mleczna</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">Nasza galaktyka ma 200 miliardów gwiazd i porusza się z prędkością 600 km/s przez przestrzeń kosmiczną!</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">🌌</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Kolizja galaktyk</h3>
-                            <p class="text-sm text-gray-300">Droga Mleczna zderzy się z Andromedą za 4 miliardy lat!</p>
+                    <!-- Ciekawostka 15 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">🕺</div>
+                                <div class="text-lg font-bold">Czerwone karły</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Czerwone karły</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">Małe czerwone gwiazdy żyją biliony lat - dłużej niż istnieje Wszechświat! Żadna z nich jeszcze nie umarła.</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">🕳️</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Sagittarius A*</h3>
-                            <p class="text-sm text-gray-300">Supermasywna czarna dziura w centrum naszej galaktyki!</p>
+                    <!-- Ciekawostka 16 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">🌋</div>
+                                <div class="text-lg font-bold">Woda we Wszechswiecie</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Woda we Wszechświecie</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">W kosmosie unoszą się ogólne chmury wodne wielkości 140 bilionów ziemskich oceanów!</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">💥</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Gwiazdy zombie</h3>
-                            <p class="text-sm text-gray-300">Gwiazdy nowe powrotne eksplodują więcej niż raz!</p>
+                    <!-- Ciekawostka 17 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">⭐</div>
+                                <div class="text-lg font-bold">Neutronowe gwiazdy</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Neutronowe gwiazdy</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">1 łyżeczka materii z gwiazdy neutronowej ważyłaby miliard ton - tyle co cała góra Everest!</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">🧊</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Zimna gwiazda</h3>
-                            <p class="text-sm text-gray-300">Brązowy karzeł W0855−0714 ma temperaturę lodówki (~-50°C)!</p>
+                    <!-- Ciekawostka 18 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">🔰</div>
+                                <div class="text-lg font-bold">Czarny Dziury</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Czarne Dziury</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">Czas przy czarnej dziurze zwalnia! Dla obserwatora spadający obiekt "zamarza" na horyzoncie zdarzeń.</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">🔥</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Niebieskie gwiazdy</h3>
-                            <p class="text-sm text-gray-300">Najgorętsze gwiazdy świecą na niebiesko - ponad 40 000°C!</p>
+                    <!-- Ciekawostka 19 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">🎄</div>
+                                <div class="text-lg font-bold">Pierścienie Saturna</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Pierścienie Saturna</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">Pierścienie Saturna są cieńsze niż kartka papieru! Mają 282 000 km szerokości, ale tylko 10m grubości.</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- Duplicate set for seamless loop -->
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">🪐</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Wenus obraca się wstecz</h3>
-                            <p class="text-sm text-gray-300">Tam Słońce wschodzi na zachodzie i zachodzi na wschodzie!</p>
+                    <!-- Ciekawostka 20 -->
+                    <div class="fact-item" onclick="this.classList.toggle('flipped')">
+                        <div class="fact-card">
+                            <div class="fact-card-front">
+                                <div class="text-4xl mb-2">🚀</div>
+                                <div class="text-lg font-bold">Prędkość kosmiczna</div>
+                            </div>
+                            <div class="fact-card-back">
+                                <h3 class="text-lg font-bold mb-3 text-cosmic-gold">Prędkość kosmiczna</h3>
+                                <p class="text-sm text-gray-300 leading-relaxed">Ziemia mknie przez kosmos z prędkością 107 000 km/h wokół Słońca. To 30 km w sekundy!</p>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">⏰</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Doba dłuższa niż rok</h3>
-                            <p class="text-sm text-gray-300">Na Wenus doba trwa 243 dni ziemskie, a rok tylko 225!</p>
-                        </div>
-                    </div>
-                    
-                    <div class="fact-item flex-shrink-0">
-                        <div class="bg-gradient-to-br from-cosmic-purple/30 to-space-dark/50 rounded-xl border border-cosmic-gold/40 p-6 backdrop-blur-sm min-w-[350px] max-w-[350px]">
-                            <div class="text-3xl mb-3">💎</div>
-                            <h3 class="text-lg font-bold mb-2 text-cosmic-gold">Diamentowe deszcze</h3>
-                            <p class="text-sm text-gray-300">Na Jowiszu i Saturnie mogą padać deszcze z diamentów!</p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -1156,13 +1330,18 @@
     <footer class="relative py-12 bg-space-darker border-t border-cosmic-purple/20">
         <div class="container mx-auto px-6 text-center">
             <p class="text-gray-400">
-                © 2024 Układ Słoneczny - Interaktywna podróż edukacyjna 🌌
+                © 2025 Marsel Cylkowski. Wszystkie prawa zastrzeżone.
             </p>
             <p class="text-sm text-gray-500 mt-2">
                 Stworzone z pasją do astronomii i edukacji
             </p>
         </div>
     </footer>
+
+    <!-- Demo Notice -->
+    <div class="demo-notice">
+        <p>⚠️ Niniejsza strona ma charakter demonstracyjny ⚠️</p>
+    </div>
 
     <script src="script.js"></script>
 </body>
