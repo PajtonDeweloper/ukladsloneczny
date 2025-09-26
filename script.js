@@ -1,765 +1,750 @@
-// Solar System Interactive Website JavaScript
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Force scroll to top on page load/refresh
+// Optimized page initialization
+(function() {
+    'use strict';
+    
+    // Force scroll to top on page load
     if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
     }
     window.scrollTo(0, 0);
     
-    // Initialize all functionality
-    initScrollAnimations();
-    initNavigation();
-    initOrbitMap();
-    initParallax();
-    initMobileMenu();
-    initRealTimePlanets();
-    initRandomizeFacts(); // Losowa kolejność ciekawostek
-    initScrollNavigation();
-    initEventUpdates();
+    // Loading Screen
+    window.addEventListener('load', function() {
+        const loader = document.querySelector('.loader-wrapper');
+    
+    setTimeout(() => {
+        loader.style.opacity = '0';
+        setTimeout(() => {
+            loader.style.display = 'none';
+            // Initialize scroll animations after loading
+            initScrollAnimations();
+            enhanceFloatingShapes();
+            // Set initial active section
+            updateActiveSection();
+        }, 500);
+    }, 2000);
 });
 
-// NOWY SYSTEM PLANET W HERO - losowe pozycje startowe
-function initRealTimePlanets() {
-    console.log('🪐 Inicjalizacja NOWEGO systemu planet w hero sekcji...');
+// Mobile Navigation - Optimized
+function initMobileNavigation() {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
     
-    // Znajdź wszystkie orbity planet w hero
-    const heroOrbits = document.querySelectorAll("#hero-solar-system .hero-orbit");
-    console.log(`🔍 Znaleziono ${heroOrbits.length} orbit planet w hero sekcji`);
+    if (!hamburger || !navMenu) return;
     
-    heroOrbits.forEach((orbit, index) => {
-        const planetName = orbit.getAttribute('data-planet');
-        const randomDeg = Math.floor(Math.random() * 360);
-        
-        // Pobierz duration z CSS computed styles
-        const computedStyle = window.getComputedStyle(orbit);
-        const duration = computedStyle.animationDuration || '30s';
-        
-        // Oblicz delay na podstawie losowej pozycji
-        const durationMs = parseFloat(duration) * 1000;
-        const randomDelay = -(randomDeg / 360) * durationMs;
-        
-        // Ustaw losowy delay dla orbit
-        orbit.style.animationDelay = `${randomDelay}ms`;
-        
-        console.log(`🪐 ${planetName}: losowa pozycja ${randomDeg}°, delay: ${randomDelay}ms, duration: ${duration}`);
+    hamburger.addEventListener('click', function(e) {
+        e.preventDefault();
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+        this.blur();
+    }, { passive: false });
+}
+
+// Navigation links handler - Optimized
+function initNavigationLinks() {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    if (!navLinks.length) return;
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Close mobile menu
+            if (hamburger && navMenu) {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            }
+            
+            // Update active state
+            navLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
+            this.blur();
+        });
     });
 }
 
-// Scroll-triggered animations
+// Smooth Scrolling for Navigation Links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        // Skip smooth scrolling for privacy policy link
+        if (this.id === 'privacy-link') {
+            return;
+        }
+        
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            const offsetTop = target.offsetTop - 80; // Account for fixed navbar
+            window.scrollTo({
+                top: offsetTop,
+                behavior: 'smooth'
+            });
+            
+            // Update active state for footer links too
+            if (this.closest('.footer-links')) {
+                document.querySelectorAll('.footer-links a').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            }
+            
+            // Remove focus to prevent outline
+            this.blur();
+        }
+    });
+});
+
+// Navbar Background on Scroll (with throttling)
+let ticking = false;
+
+function updateNavbar() {
+    const navbar = document.querySelector('.navbar');
+    if (window.scrollY > 100) {
+        navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+        navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+    } else {
+        navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+        navbar.style.boxShadow = 'none';
+    }
+    ticking = false;
+}
+
+// Active Section Tracking
+function updateActiveSection() {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const footerLinks = document.querySelectorAll('.footer-links a[href^="#"]');
+    
+    let currentSection = '';
+    const scrollPosition = window.scrollY + 100; // Offset for navbar height
+    
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
+        
+        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+            currentSection = section.getAttribute('id');
+        }
+    });
+    
+    // Update nav links
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${currentSection}`) {
+            link.classList.add('active');
+        }
+    });
+    
+    // Update footer links
+    footerLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${currentSection}`) {
+            link.classList.add('active');
+        }
+    });
+}
+
+function handleScroll() {
+    updateNavbar();
+    updateActiveSection();
+    ticking = false;
+}
+
+window.addEventListener('scroll', function() {
+    if (!ticking) {
+        requestAnimationFrame(handleScroll);
+        ticking = true;
+    }
+});
+
+// Scroll Animations
 function initScrollAnimations() {
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
     };
 
-    const observer = new IntersectionObserver((entries) => {
+    const observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('animate-in');
+                entry.target.classList.add('visible');
             }
         });
     }, observerOptions);
 
-    // Observe planet cards
-    document.querySelectorAll('.planet-card').forEach(card => {
-        observer.observe(card);
-    });
+    // Add animation classes and observe elements
+    const animateElements = [
+        { selector: '.about-content .about-image', class: 'slide-in-left' },
+        { selector: '.about-content .about-text', class: 'slide-in-right' },
+        { selector: '.service-card', class: 'fade-in' },
+        { selector: '.approach-content .approach-text', class: 'slide-in-left' },
+        { selector: '.approach-content .approach-visual', class: 'slide-in-right' },
+        { selector: '.testimonial-card', class: 'fade-in' },
+        { selector: '.faq-intro', class: 'slide-in-left' },
+        { selector: '.faq-list', class: 'slide-in-right' },
+        { selector: '.pricing-card', class: 'fade-in' },
+        { selector: '.contact-info-column', class: 'slide-in-left' },
+        { selector: '.contact-form-container', class: 'slide-in-right' },
+        { selector: '.principle', class: 'fade-in' }
+    ];
 
-    // Observe other elements for fade-in animations
-    document.querySelectorAll('.fade-in-up').forEach(element => {
-        observer.observe(element);
+    animateElements.forEach(({ selector, class: className }) => {
+        document.querySelectorAll(selector).forEach((element, index) => {
+            element.classList.add(className);
+            element.style.transitionDelay = `${index * 0.1}s`;
+            observer.observe(element);
+        });
     });
 }
 
-// NOWA NAWIGACJA - przepisana od zera
-function initNavigation() {
-    console.log('🚀 Inicjalizacja nawigacji...');
+// Floating Shapes Animation Enhancement (optimized) - DISABLED MOUSE INTERACTION
+function enhanceFloatingShapes() {
+    const shapes = document.querySelectorAll('.floating-shape');
     
-    // Mapa sekcji z ich offsetami (uwzględniając fixed navbar)
-    const navbarHeight = 80; // wysokość fixed navbar
-    const sectionOffsets = {
-        '#hero': 0,
-        '#sun-section': navbarHeight + 40,
-        '#planets': navbarHeight + 40,
-        '#mercury-section': navbarHeight + 40,
-        '#venus-section': navbarHeight + 40,
-        '#earth-section': navbarHeight + 40,
-        '#mars-section': navbarHeight + 40,
-        '#jupiter-section': navbarHeight + 40,
-        '#saturn-section': navbarHeight + 40,
-        '#uranus-section': navbarHeight + 40,
-        '#neptune-section': navbarHeight + 40,
-        '#orbit-map': navbarHeight + 20,
-        '#events': navbarHeight + 20,
-        '#facts': navbarHeight + 20
-    };
-    
-    // Znajdź wszystkie linki nawigacyjne
-    const navLinks = document.querySelectorAll('.nav-link');
-    console.log(`📍 Znaleziono ${navLinks.length} linków nawigacyjnych`);
-    
-    // Funkcja do przewijania do sekcji
-    function scrollToSection(targetId) {
-        console.log(`🎯 Próba przewinięcia do: ${targetId}`);
-        const targetElement = document.querySelector(targetId);
-        
-        if (!targetElement) {
-            console.error(`❌ Nie znaleziono sekcji: ${targetId}`);
-            console.log('📋 Dostępne sekcje:', Array.from(document.querySelectorAll('[id]')).map(el => `#${el.id}`));
-            return;
-        }
-        
-        let scrollPosition;
-        
-        if (targetId === '#hero') {
-            scrollPosition = 0;
-        } else {
-            const elementRect = targetElement.getBoundingClientRect();
-            const elementTop = elementRect.top + window.pageYOffset;
-            const offset = sectionOffsets[targetId] || 100;
-            scrollPosition = Math.max(0, elementTop - offset);
-        }
-        
-        console.log(`📍 Przewijam do ${targetId}, pozycja: ${scrollPosition}, offset: ${sectionOffsets[targetId] || 100}`);
-        
-        // Smooth scroll z fallback
-        if ('scrollBehavior' in document.documentElement.style) {
-            window.scrollTo({
-                top: scrollPosition,
-                behavior: 'smooth'
-            });
-        } else {
-            // Fallback dla starszych przeglądarek
-            window.scrollTo(0, scrollPosition);
-        }
-    }
-    
-    // Funkcja do podświetlania aktywnego linku
-    function setActiveLink(activeLink) {
-        // Usuń aktywność ze wszystkich linków
-        navLinks.forEach(link => {
-            link.classList.remove('nav-active');
-            link.classList.add('text-gray-300');
-        });
-        
-        // Dodaj aktywność do wybranego linku
-        if (activeLink) {
-            activeLink.classList.remove('text-gray-300');
-            activeLink.classList.add('nav-active');
-            console.log(`✨ Podświetlono: ${activeLink.getAttribute('href')}`);
-        }
-    }
-    
-    // Dodaj event listenery do wszystkich linków nawigacyjnych
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const targetId = this.getAttribute('href');
-            console.log(`🖱️ Kliknięto: ${targetId}`);
-            
-            // Przewiń do sekcji
-            scrollToSection(targetId);
-            
-            // Podświetl aktywny link
-            setActiveLink(this);
-        });
+    // Remove any mouse interaction - shapes will only use CSS animation
+    shapes.forEach((shape) => {
+        shape.style.transform = 'none';
+        shape.style.transition = 'none';
     });
-    
-    // Dodaj event listenery do linków w dropdown
-    const dropdownLinks = document.querySelectorAll('.group a[href^="#"]');
-    dropdownLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const targetId = this.getAttribute('href');
-            console.log(`🖱️ Kliknięto dropdown: ${targetId}`);
-            
-            // Przewiń do sekcji
-            scrollToSection(targetId);
-        });
-    });
-    
-    // Automatyczne podświetlanie będzie ustawione przez initScrollNavigation()
-    console.log('☀️ Automatyczne podświetlanie nawigacji będzie zarządzane przez scroll');
-    
-    // Obsługa przycisku strzałki w hero
-    const scrollDownBtn = document.getElementById('scroll-down-btn');
-    if (scrollDownBtn) {
-        scrollDownBtn.addEventListener('click', () => {
-            scrollToSection('#sun-section');
-        });
-    }
-    
-    // Obsługa przycisku "Rozpocznij podróż"
-    const startJourneyBtn = document.getElementById('start-journey-btn');
-    if (startJourneyBtn) {
-        startJourneyBtn.addEventListener('click', () => {
-            scrollToSection('#sun-section');
-        });
-    }
-    
-    // Test - sprawdź czy wszystkie sekcje istnieją
-    console.log('🔍 Sprawdzanie dostępności sekcji:');
-    Object.keys(sectionOffsets).forEach(sectionId => {
-        const element = document.querySelector(sectionId);
-        if (element) {
-            console.log(`✅ ${sectionId} - OK`);
-        } else {
-            console.error(`❌ ${sectionId} - BRAK!`);
-        }
-    });
-    
-    console.log('✅ Nawigacja zainicjalizowana pomyślnie!');
 }
 
-// RANDOMIZACJA CIEKAWOSTEK - losowa kolejność przy każdym załadowaniu
-function initRandomizeFacts() {
-    console.log('🎲 Randomizacja kolejności ciekawostek...');
+// Contact Form Handling
+const contactForm = document.getElementById('contactForm');
+
+contactForm.addEventListener('submit', function(e) {
+    e.preventDefault();
     
-    const track = document.querySelector('.facts-scroll-track');
-    if (!track) {
-        console.error('❌ Nie znaleziono .facts-scroll-track');
+    // Get form data
+    const formData = new FormData(contactForm);
+    const data = Object.fromEntries(formData);
+    
+    // Simple validation
+    if (!data.name || !data.email || !data.message || !data.privacy) {
+        showNotification('Proszę wypełnić wszystkie wymagane pola.', 'error');
         return;
     }
     
-    // Pobierz wszystkie ciekawostki
-    const factItems = Array.from(track.children);
-    if (factItems.length === 0) {
-        console.error('❌ Brak ciekawostek do randomizacji');
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(data.email)) {
+        showNotification('Proszę podać prawidłowy adres email.', 'error');
         return;
     }
     
-    // Funkcja Fisher-Yates shuffle
-    function shuffleArray(array) {
-        const shuffled = [...array];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-        return shuffled;
-    }
+    // Simulate form submission
+    const submitButton = contactForm.querySelector('button[type="submit"]');
+    const originalText = submitButton.textContent;
     
-    // Wymieszaj ciekawostki
-    const shuffledFacts = shuffleArray(factItems);
-    
-    // Wyczyść track
-    track.innerHTML = '';
-    
-    // Dodaj z powrotem w nowej kolejności
-    shuffledFacts.forEach((fact, index) => {
-        // Dla mobile (pierwsza ciekawostka) - usuń onclick
-        if (window.innerWidth <= 768 && index === 0) {
-            fact.removeAttribute('onclick');
-            fact.style.cursor = 'default';
-        }
-        track.appendChild(fact);
-    });
-    
-    console.log('✨ Ciekawostki zostały wymieszane!');
-    console.log('🏆 Pierwsza ciekawostka:', shuffledFacts[0].querySelector('h3')?.textContent || 'Nieznana');
-}
-
-// Funkcja automatycznego podświetlania nawigacji podczas scrollowania
-function initScrollNavigation() {
-    let ticking = false;
-    let lastScrollTime = 0;
-    
-    function updateActiveNavOnScroll() {
-        const scrollPosition = window.pageYOffset + 120; // offset dla navbar
-        let currentSection = '#hero'; // domyślnie
-        
-        // Funkcja do obliczania rzeczywistej pozycji elementu w dokumencie
-        function getElementTop(element) {
-            let top = 0;
-            while (element) {
-                top += element.offsetTop;
-                element = element.offsetParent;
-            }
-            return top;
-        }
-        
-        // Lista sekcji w kolejności od góry do dołu
-        const sections = [
-            { id: '#hero', element: document.querySelector('#hero') },
-            { id: '#sun-section', element: document.querySelector('#sun-section') },
-            { id: '#planets', element: document.querySelector('#planets') },
-            { id: '#mercury-section', element: document.querySelector('#mercury-section') },
-            { id: '#venus-section', element: document.querySelector('#venus-section') },
-            { id: '#earth-section', element: document.querySelector('#earth-section') },
-            { id: '#mars-section', element: document.querySelector('#mars-section') },
-            { id: '#jupiter-section', element: document.querySelector('#jupiter-section') },
-            { id: '#saturn-section', element: document.querySelector('#saturn-section') },
-            { id: '#uranus-section', element: document.querySelector('#uranus-section') },
-            { id: '#neptune-section', element: document.querySelector('#neptune-section') },
-            { id: '#orbit-map', element: document.querySelector('#orbit-map') },
-            { id: '#events', element: document.querySelector('#events') },
-            { id: '#facts', element: document.querySelector('#facts') }
-        ];
-        
-        // Znajdź aktualną sekcję - sprawdzaj od końca do początku
-        for (let i = sections.length - 1; i >= 0; i--) {
-            const section = sections[i];
-            if (section.element) {
-                const sectionTop = getElementTop(section.element);
-                
-                if (scrollPosition >= sectionTop - 150) {
-                    currentSection = section.id;
-                    break;
-                }
-            }
-        }
-        
-        // Debug: sprawdź czy facts section jest wykrywana
-        if (currentSection === '#facts') {
-            console.log(`📍 Scroll: ${scrollPosition}, Aktywna sekcja: ${currentSection} - FACTS DETECTED!`);
-        }
-        
-        // Podświetl odpowiedni link
-        const navLinks = document.querySelectorAll('.nav-link');
-        const planetsButton = document.querySelector('.nav-link[href="#planets"], .group button.nav-link');
-        
-        // Lista sekcji planet
-        const planetSections = [
-            '#sun-section', '#mercury-section', '#venus-section', 
-            '#earth-section', '#mars-section', '#jupiter-section', 
-            '#saturn-section', '#uranus-section', '#neptune-section'
-        ];
-        
-        navLinks.forEach(link => {
-            link.classList.remove('nav-active');
-            link.classList.add('text-gray-300');
-            
-            if (link.getAttribute('href') === currentSection) {
-                link.classList.remove('text-gray-300');
-                link.classList.add('nav-active');
-                
-                // Debug: sprawdź czy facts link jest podświetlany
-                if (currentSection === '#facts') {
-                    console.log(`✨ Facts navigation link activated!`);
-                }
-            }
-        });
-        
-        // Podświetl "Planety" jeśli jesteśmy na którejś z planet
-        if (planetsButton) {
-            planetsButton.classList.remove('nav-active');
-            if (planetSections.includes(currentSection)) {
-                planetsButton.classList.remove('text-gray-300');
-                planetsButton.classList.add('nav-active');
-                console.log(`🪐 Planets button activated for section: ${currentSection}`);
-            } else {
-                planetsButton.classList.add('text-gray-300');
-            }
-        }
-        
-        ticking = false;
-    }
-    
-    function requestTick() {
-        const now = Date.now();
-        if (!ticking && now - lastScrollTime > 50) { // throttle do 20fps
-            requestAnimationFrame(() => {
-                updateActiveNavOnScroll();
-                lastScrollTime = now;
-                ticking = false;
-            });
-            ticking = true;
-        }
-    }
-    
-    // Dodaj event listener na scroll
-    window.addEventListener('scroll', requestTick);
-    
-    // Uruchom raz na starcie
-    updateActiveNavOnScroll();
-    
-    console.log('📍 Automatyczne podświetlanie nawigacji włączone');
-}
-
-// Funkcja automatycznej aktualizacji wydarzeń
-function initEventUpdates() {
-    console.log('📅 Inicjalizacja automatycznych aktualizacji wydarzeń...');
-    
-    // Funkcja do obliczania dni do wydarzenia
-    function getDaysUntilEvent(dateString) {
-        if (dateString === 'daily') return 0;
-        
-        const eventDate = new Date(dateString);
-        const today = new Date();
-        const diffTime = eventDate - today;
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        
-        return diffDays;
-    }
-    
-    // Funkcja do formatowania daty
-    function formatEventDate(dateString, daysUntil) {
-        if (dateString === 'daily') return 'Codziennie o różnych godzinach';
-        
-        const eventDate = new Date(dateString);
-        const options = { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-        };
-        
-        const formattedDate = eventDate.toLocaleDateString('pl-PL', options);
-        
-        if (daysUntil < 0) {
-            return `${formattedDate} (minęło)`;
-        } else if (daysUntil === 0) {
-            return `${formattedDate} (dziś!)`;
-        } else if (daysUntil === 1) {
-            return `${formattedDate} (jutro!)`;
-        } else if (daysUntil <= 7) {
-            return `${formattedDate} (za ${daysUntil} dni)`;
-        } else if (daysUntil <= 30) {
-            return `${formattedDate} (za ${daysUntil} dni)`;
-        } else {
-            return formattedDate;
-        }
-    }
-    
-    // Funkcja do aktualizacji statusu wydarzenia
-    function updateEventStatus() {
-        const eventCards = document.querySelectorAll('.event-card[data-date]');
-        
-        eventCards.forEach(card => {
-            const dateString = card.getAttribute('data-date');
-            const daysUntil = getDaysUntilEvent(dateString);
-            const dateElement = card.querySelector('.text-cosmic-blue');
-            
-            if (dateElement) {
-                dateElement.textContent = formatEventDate(dateString, daysUntil);
-                
-                // Dodaj specjalne style dla nadchodzących wydarzeń
-                card.classList.remove('event-soon', 'event-today', 'event-past');
-                
-                if (daysUntil < 0) {
-                    card.classList.add('event-past');
-                    card.style.opacity = '0.6';
-                } else if (daysUntil === 0) {
-                    card.classList.add('event-today');
-                    card.style.boxShadow = '0 0 20px rgba(245, 158, 11, 0.5)';
-                } else if (daysUntil <= 7 && daysUntil > 0) {
-                    card.classList.add('event-soon');
-                    card.style.boxShadow = '0 0 15px rgba(139, 92, 246, 0.4)';
-                } else {
-                    card.style.opacity = '1';
-                    card.style.boxShadow = '';
-                }
-            }
-        });
-        
-        console.log('📅 Wydarzenia zaktualizowane');
-    }
-    
-    // Aktualizuj wydarzenia na starcie
-    updateEventStatus();
-    
-    // Aktualizuj wydarzenia co godzinę
-    setInterval(updateEventStatus, 3600000); // 1 godzina = 3600000ms
-    
-    // Aktualizuj wydarzenia o północy
-    const now = new Date();
-    const tomorrow = new Date(now);
-    tomorrow.setDate(now.getDate() + 1);
-    tomorrow.setHours(0, 0, 0, 0);
-    
-    const msUntilMidnight = tomorrow.getTime() - now.getTime();
+    submitButton.textContent = 'Wysyłanie...';
+    submitButton.disabled = true;
     
     setTimeout(() => {
-        updateEventStatus();
-        // Następnie aktualizuj codziennie o północy
-        setInterval(updateEventStatus, 24 * 60 * 60 * 1000); // 24 godziny
-    }, msUntilMidnight);
-    
-    console.log('✅ Automatyczne aktualizacje wydarzeń włączone');
-}
-
-
-// NOWA MAPA ORBIT - rzeczywiste pozycje planet w czasie rzeczywistym
-function initOrbitMap() {
-    console.log('🌌 Inicjalizacja NOWEJ mapy orbit z rzeczywistymi pozycjami...');
-    
-    // Dokładne okresy orbitalne planet (w dniach ziemskich)
-    const orbitalPeriods = {
-        mercury: 87.969,
-        venus: 224.701,
-        earth: 365.256,
-        mars: 686.98,
-        jupiter: 4332.59,
-        saturn: 10759.22,
-        uranus: 30688.5,
-        neptune: 60182
-    };
-    
-    // Pozycje planet na 1 stycznia 2025 (w stopniach od perihel)
-    const initialPositions = {
-        mercury: 45,
-        venus: 180,
-        earth: 100,
-        mars: 270,
-        jupiter: 15,
-        saturn: 320,
-        uranus: 50,
-        neptune: 358
-    };
-    
-    // Data referencyjna (1 stycznia 2025)
-    const referenceDate = new Date('2025-01-01T00:00:00Z');
-    
-    function calculateRealPlanetPosition(planetName) {
-        const now = new Date();
-        const daysSinceReference = (now - referenceDate) / (1000 * 60 * 60 * 24);
-        
-        const period = orbitalPeriods[planetName];
-        const initialPos = initialPositions[planetName];
-        
-        // Oblicz aktualną pozycję kątową
-        const currentAngle = (initialPos + (daysSinceReference / period) * 360) % 360;
-        
-        return currentAngle;
-    }
-    
-    function updateRealPlanetPositions() {
-        console.log('🔄 Aktualizacja rzeczywistych pozycji planet...');
-        
-        // Znajdź wszystkie planety w nowej mapie
-        const planets = document.querySelectorAll('.real-planet');
-        
-        planets.forEach(planet => {
-            const planetName = planet.getAttribute('data-planet');
-            const orbitRadius = parseInt(planet.getAttribute('data-orbit-radius'));
-            const displayName = planet.getAttribute('data-name');
-            
-            if (orbitalPeriods[planetName]) {
-                // Oblicz rzeczywistą pozycję
-                const angle = calculateRealPlanetPosition(planetName);
-                const angleRad = (angle * Math.PI) / 180;
-                
-                // Oblicz pozycję X, Y na orbicie
-                const x = orbitRadius * Math.cos(angleRad);
-                const y = orbitRadius * Math.sin(angleRad);
-                
-                // Ustaw pozycję planety
-                planet.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
-                
-                console.log(`🪐 ${displayName}: ${angle.toFixed(1)}° (${x.toFixed(1)}, ${y.toFixed(1)})`);
-            }
-        });
-        
-        // Aktualizuj datę
-        updateDateTime();
-        
-        // Zaplanuj następną aktualizację za 24 godziny
-        setTimeout(updateRealPlanetPositions, 24 * 60 * 60 * 1000);
-    }
-    
-    function updateDateTime() {
-        const now = new Date();
-        const dateTimeString = now.toLocaleString('pl-PL', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-        
-        const dateElement = document.getElementById('current-date');
-        if (dateElement) {
-            dateElement.textContent = `Aktualna data: ${dateTimeString}`;
-        }
-    }
-    
-    // Rozpocznij aktualizację
-    updateDateTime();
-    updateRealPlanetPositions();
-    
-    console.log('✅ Nowa mapa orbit zainicjalizowana!');
-}
-
-
-// Parallax scrolling effect
-function initParallax() {
-    const starsLayers = document.querySelectorAll('[class^="stars-layer"]');
-    
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const rate = scrolled * -0.5;
-        
-        starsLayers.forEach((layer, index) => {
-            const speed = (index + 1) * 0.2;
-            layer.style.transform = `translateY(${rate * speed}px)`;
-        });
-    });
-}
-
-// Mobile menu functionality
-function initMobileMenu() {
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const navContainer = document.querySelector('nav .container');
-    
-    if (mobileMenuBtn && navContainer) {
-        // Create mobile menu if it doesn't exist
-        let mobileMenu = document.getElementById('mobile-menu');
-        if (!mobileMenu) {
-            mobileMenu = document.createElement('div');
-            mobileMenu.id = 'mobile-menu';
-            mobileMenu.className = 'md:hidden fixed top-20 left-0 right-0 bg-space-dark/95 backdrop-blur-md border-b border-cosmic-purple/30 z-40 transform -translate-y-full opacity-0 transition-all duration-300';
-            
-            mobileMenu.innerHTML = `
-                <div class="px-6 py-4 space-y-3">
-                    <a href="#hero" class="block py-2 text-gray-300 hover:text-cosmic-gold transition-colors">Menu Główne</a>
-                    <div class="border-t border-cosmic-purple/20 pt-3">
-                        <p class="text-cosmic-gold font-semibold mb-2">Planety</p>
-                        <a href="#sun-section" class="block py-1 pl-4 text-gray-300 hover:text-cosmic-gold transition-colors">Słońce</a>
-                        <a href="#mercury-section" class="block py-1 pl-4 text-gray-300 hover:text-cosmic-gold transition-colors">Merkury</a>
-                        <a href="#venus-section" class="block py-1 pl-4 text-gray-300 hover:text-cosmic-gold transition-colors">Wenus</a>
-                        <a href="#earth-section" class="block py-1 pl-4 text-gray-300 hover:text-cosmic-gold transition-colors">Ziemia</a>
-                        <a href="#mars-section" class="block py-1 pl-4 text-gray-300 hover:text-cosmic-gold transition-colors">Mars</a>
-                        <a href="#jupiter-section" class="block py-1 pl-4 text-gray-300 hover:text-cosmic-gold transition-colors">Jowisz</a>
-                        <a href="#saturn-section" class="block py-1 pl-4 text-gray-300 hover:text-cosmic-gold transition-colors">Saturn</a>
-                        <a href="#uranus-section" class="block py-1 pl-4 text-gray-300 hover:text-cosmic-gold transition-colors">Uran</a>
-                        <a href="#neptune-section" class="block py-1 pl-4 text-gray-300 hover:text-cosmic-gold transition-colors">Neptun</a>
-                    </div>
-                    <a href="#orbit-map" class="block py-2 text-gray-300 hover:text-cosmic-gold transition-colors border-t border-cosmic-purple/20 pt-3">Mapa Orbit</a>
-                    <a href="#events" class="block py-2 text-gray-300 hover:text-cosmic-gold transition-colors">Wydarzenia</a>
-                    <a href="#facts" class="block py-2 text-gray-300 hover:text-cosmic-gold transition-colors">Ciekawostki</a>
-                </div>
-            `;
-            
-            document.body.appendChild(mobileMenu);
-        }
-        
-        let isMenuOpen = false;
-        
-        mobileMenuBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            isMenuOpen = !isMenuOpen;
-            
-            if (isMenuOpen) {
-                mobileMenu.classList.remove('-translate-y-full', 'opacity-0');
-                mobileMenu.classList.add('translate-y-0', 'opacity-100');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
-            } else {
-                mobileMenu.classList.add('-translate-y-full', 'opacity-0');
-                mobileMenu.classList.remove('translate-y-0', 'opacity-100');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            }
-        });
-        
-        // Add click handlers to mobile menu links
-        mobileMenu.addEventListener('click', (e) => {
-            if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#')) {
-                e.preventDefault();
-                const targetId = e.target.getAttribute('href');
-                
-                // Close mobile menu
-                isMenuOpen = false;
-                mobileMenu.classList.add('-translate-y-full', 'opacity-0');
-                mobileMenu.classList.remove('translate-y-0', 'opacity-100');
-                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-                
-                // Scroll to section
-                const scrollToSection = window.scrollToSectionGlobal || function(id) {
-                    const element = document.querySelector(id);
-                    if (element) {
-                        const offset = 120;
-                        const elementTop = element.getBoundingClientRect().top + window.pageYOffset;
-                        window.scrollTo({
-                            top: Math.max(0, elementTop - offset),
-                            behavior: 'smooth'
-                        });
-                    }
-                };
-                
-                scrollToSection(targetId);
-            }
-        });
-        
-        console.log('📱 Mobile menu initialized');
-    }
-}
-
-// Hero CTA button functionality - REMOVED (handled by initNavigation)
-
-// Planet hover effects - REMOVED (handled by CSS)
-
-// Add loading animation
-window.addEventListener('load', function() {
-    document.body.classList.add('loading');
-    setTimeout(function() {
-        document.body.classList.remove('loading');
+        showNotification('Dziękuję za wiadomość! Odpowiem w ciągu 24 godzin.', 'success');
+        contactForm.reset();
+        submitButton.textContent = originalText;
+        submitButton.disabled = false;
     }, 2000);
-    
-    // Scrolling facts używają statycznej struktury HTML
 });
 
+// Notification System
+function showNotification(message, type = 'info') {
+    // Remove existing notifications
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => notification.remove());
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <span class="notification-icon">${type === 'success' ? '✓' : type === 'error' ? '✗' : 'ℹ'}</span>
+            <span class="notification-message">${message}</span>
+            <button class="notification-close">&times;</button>
+        </div>
+    `;
+    
+    // Add styles
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        z-index: 10000;
+        background: ${type === 'success' ? '#8fbc8f' : type === 'error' ? '#d2691e' : '#8b7d6b'};
+        color: white;
+        padding: 16px 20px;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        max-width: 400px;
+    `;
+    
+    notification.querySelector('.notification-content').style.cssText = `
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    `;
+    
+    notification.querySelector('.notification-close').style.cssText = `
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        margin-left: auto;
+    `;
+    
+    // Add to page
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => notification.remove(), 300);
+    }, 5000);
+    
+    // Close button functionality
+    notification.querySelector('.notification-close').addEventListener('click', () => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => notification.remove(), 300);
+    });
+}
 
-// Add intersection observer for performance
-const observerOptions = {
-    root: null,
-    rootMargin: '0px',
-    threshold: 0.1
-};
+// Breathing Animation for Hero Elements
+function initBreathingAnimation() {
+    const heroTitle = document.querySelector('.hero-title');
+    const heroSubtitle = document.querySelector('.hero-subtitle');
+    
+    if (heroTitle && heroSubtitle) {
+        let breathePhase = 0;
+        
+        setInterval(() => {
+            breathePhase += 0.02;
+            const scale = 1 + Math.sin(breathePhase) * 0.005;
+            const opacity = 0.8 + Math.sin(breathePhase * 0.7) * 0.2;
+            
+            heroTitle.style.transform = `scale(${scale})`;
+            heroSubtitle.style.opacity = opacity;
+        }, 50);
+    }
+}
 
-// Lazy loading for heavy animations
-const animationObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('animate');
+// Parallax Effect for Hero Section - DISABLED
+function initParallaxEffect() {
+    const heroImage = document.querySelector('.hero-img');
+    
+    if (heroImage) {
+        // Completely disable parallax - keep image static
+        heroImage.style.transform = 'none';
+        heroImage.style.position = 'static';
+    }
+}
+
+// Form Field Animation Enhancement
+function enhanceFormFields() {
+    const formGroups = document.querySelectorAll('.form-group');
+    
+    formGroups.forEach(group => {
+        const input = group.querySelector('input, textarea');
+        const label = group.querySelector('label');
+        
+        if (input && label) {
+            // Check if field has value on page load
+            if (input.value) {
+                label.style.top = '-10px';
+                label.style.fontSize = '12px';
+                label.style.background = 'white';
+                label.style.padding = '0 8px';
+                label.style.color = '#8fbc8f';
+            }
+            
+            input.addEventListener('input', () => {
+                if (input.value) {
+                    label.style.top = '-10px';
+                    label.style.fontSize = '12px';
+                    label.style.background = 'white';
+                    label.style.padding = '0 8px';
+                    label.style.color = '#8fbc8f';
+                } else {
+                    label.style.top = '12px';
+                    label.style.fontSize = '14px';
+                    label.style.background = 'transparent';
+                    label.style.padding = '0';
+                    label.style.color = '#8a8a8a';
+                }
+            });
         }
     });
-}, observerOptions);
+}
 
-// Observe elements that need animation
-document.addEventListener('DOMContentLoaded', function() {
-    const animatedElements = document.querySelectorAll('.fade-in-up');
-    animatedElements.forEach(el => {
-        animationObserver.observe(el);
-    });
-});
-
-// Easter egg: Konami code for special effect
-let konamiCode = [];
-const konamiSequence = [
-    'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
-    'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
-    'KeyB', 'KeyA'
-];
-
-document.addEventListener('keydown', function(e) {
-    konamiCode.push(e.code);
+// Service Cards Hover Effect Enhancement
+function enhanceServiceCards() {
+    const serviceCards = document.querySelectorAll('.service-card');
     
-    if (konamiCode.length > konamiSequence.length) {
-        konamiCode.shift();
-    }
-    
-    if (konamiCode.join(',') === konamiSequence.join(',')) {
-        // Special cosmic effect
-        document.body.style.animation = 'cosmic-explosion 2s ease-in-out';
-        setTimeout(() => {
-            document.body.style.animation = '';
-        }, 2000);
+    serviceCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            // Add subtle rotation and glow
+            card.style.transform = 'translateY(-10px) rotate(1deg)';
+            card.style.boxShadow = '0 20px 60px rgba(143, 188, 143, 0.3)';
+        });
         
-        konamiCode = [];
+        card.addEventListener('mouseleave', () => {
+            // Reset transform for all cards
+            card.style.transform = 'translateY(0)';
+            card.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.1)';
+        });
+    });
+}
+
+// Testimonial Cards Hover Effect Enhancement
+function enhanceTestimonialCards() {
+    const testimonialCards = document.querySelectorAll('.testimonial-card');
+    
+    testimonialCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            // Add subtle rotation and glow
+            card.style.transform = 'translateY(-10px) rotate(1deg)';
+            card.style.boxShadow = '0 20px 60px rgba(143, 188, 143, 0.3)';
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            // Reset transform
+            card.style.transform = 'translateY(0)';
+            card.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.1)';
+        });
+    });
+}
+
+// Pricing Cards Hover Effect Enhancement
+function enhancePricingCards() {
+    const pricingCards = document.querySelectorAll('.pricing-card');
+    
+    pricingCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            // Add subtle rotation and glow
+            card.style.transform = 'translateY(-10px) rotate(1deg)';
+            card.style.boxShadow = '0 20px 60px rgba(143, 188, 143, 0.3)';
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            // Reset transform
+            card.style.transform = 'translateY(0)';
+            card.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.1)';
+        });
+    });
+}
+
+// ===== OPTIMIZED CODE STRUCTURE =====
+// All initialization functions are now consolidated into a single DOMContentLoaded event
+// Removed duplicate event listeners and unused code
+
+// Accessibility improvements
+function improveAccessibility() {
+    // Add focus indicators
+    const focusableElements = document.querySelectorAll('a, button, input, textarea, [tabindex]');
+    
+    focusableElements.forEach(element => {
+        element.addEventListener('focus', () => {
+            element.style.outline = '2px solid #8fbc8f';
+            element.style.outlineOffset = '2px';
+        });
+        
+        element.addEventListener('blur', () => {
+            element.style.outline = 'none';
+        });
+    });
+    
+    // Add ARIA labels where needed
+    const hamburgerBtn = document.querySelector('.hamburger');
+    if (hamburgerBtn) {
+        hamburgerBtn.setAttribute('aria-label', 'Toggle navigation menu');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+        
+        hamburgerBtn.addEventListener('click', () => {
+            const isExpanded = hamburgerBtn.classList.contains('active');
+            hamburgerBtn.setAttribute('aria-expanded', isExpanded);
+        });
     }
+}
+
+// FAQ Functionality - Optimized for all devices with scroll detection
+function initFAQFunctionality() {
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        const answer = item.querySelector('.faq-answer');
+        
+        if (!question || !answer) return;
+        
+        // Variables to track touch/scroll behavior
+        let touchStartY = 0;
+        let touchStartTime = 0;
+        let isScrolling = false;
+        
+        // Touch start - record initial position
+        question.addEventListener('touchstart', function(e) {
+            touchStartY = e.touches[0].clientY;
+            touchStartTime = Date.now();
+            isScrolling = false;
+        }, { passive: true });
+        
+        // Touch move - detect if user is scrolling
+        question.addEventListener('touchmove', function(e) {
+            const touchY = e.touches[0].clientY;
+            const deltaY = Math.abs(touchY - touchStartY);
+            
+            // If moved more than 10px vertically, consider it scrolling
+            if (deltaY > 10) {
+                isScrolling = true;
+            }
+        }, { passive: true });
+        
+        // Touch end - only trigger if not scrolling
+        question.addEventListener('touchend', function(e) {
+            const touchDuration = Date.now() - touchStartTime;
+            
+            // Only trigger if:
+            // 1. Not scrolling
+            // 2. Touch duration less than 300ms (quick tap)
+            // 3. Not currently animating
+            if (!isScrolling && touchDuration < 300 && item.dataset.animating !== 'true') {
+                e.preventDefault();
+                toggleFAQ(item);
+            }
+        }, { passive: false });
+        
+        // Click event for desktop and as fallback
+        question.addEventListener('click', function(e) {
+            // Prevent if this was triggered by touch (avoid double trigger)
+            if (e.detail === 0) return; // detail === 0 means triggered by touch
+            
+            e.preventDefault();
+            toggleFAQ(item);
+        });
+        
+        // Keyboard support
+        question.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleFAQ(item);
+            }
+        });
+        
+        // FAQ toggle function
+        function toggleFAQ(faqItem) {
+            // Debounce - prevent rapid clicks during animation
+            if (faqItem.dataset.animating === 'true') return;
+            faqItem.dataset.animating = 'true';
+            
+            // Toggle active state
+            faqItem.classList.toggle('active');
+            
+            // Reset debounce after animation completes (300ms)
+            setTimeout(() => {
+                faqItem.dataset.animating = 'false';
+            }, 300);
+            
+            // Remove focus to prevent outline
+            question.blur();
+        }
+        
+        // Accessibility attributes
+        question.setAttribute('tabindex', '0');
+        question.setAttribute('role', 'button');
+        question.setAttribute('aria-expanded', 'false');
+        
+        // Update aria-expanded when toggled
+        const observer = new MutationObserver(() => {
+            const isExpanded = item.classList.contains('active');
+            question.setAttribute('aria-expanded', isExpanded);
+        });
+        
+        observer.observe(item, { attributes: true, attributeFilter: ['class'] });
+    });
+}
+
+// Removed - consolidated into main DOMContentLoaded
+
+// Contact Icons Functionality
+function initContactIcons() {
+    const clickableIcons = document.querySelectorAll('.clickable-icon');
+    
+    clickableIcons.forEach(icon => {
+        icon.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            const action = icon.dataset.action;
+            const value = icon.dataset.value;
+            
+            switch(action) {
+                case 'phone':
+                    // Otwórz aplikację telefonu
+                    window.location.href = `tel:${value}`;
+                    showNotification('Otwieranie aplikacji telefonu...', 'info');
+                    break;
+                    
+                case 'email':
+                    // Otwórz aplikację email z predefiniowanym tematem
+                    const subject = 'Zapytanie o terapię psychologiczną';
+                    const body = 'Dzień dobry,%0D%0A%0D%0AChciałbym/Chciałabym zapytać o możliwość umówienia wizyty.%0D%0A%0D%0APozdrawiam';
+                    window.location.href = `mailto:${value}?subject=${encodeURIComponent(subject)}&body=${body}`;
+                    showNotification('Otwieranie aplikacji email...', 'info');
+                    break;
+                    
+                case 'maps':
+                    // Otwórz Google Maps z adresem
+                    const encodedAddress = encodeURIComponent(value);
+                    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+                    window.open(mapsUrl, '_blank');
+                    showNotification('Otwieranie Google Maps...', 'success');
+                    break;
+                    
+                default:
+                    console.log('Nieznana akcja:', action);
+            }
+            
+            // Dodaj efekt kliknięcia
+            icon.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                icon.style.transform = '';
+            }, 150);
+        });
+        
+        // Dodaj efekt hover na touch devices
+        icon.addEventListener('touchstart', () => {
+            icon.style.transform = 'scale(1.05)';
+        });
+        
+        icon.addEventListener('touchend', () => {
+            setTimeout(() => {
+                icon.style.transform = '';
+            }, 100);
+        });
+        
+        // Dodaj accessibility
+        icon.setAttribute('role', 'button');
+        icon.setAttribute('tabindex', '0');
+        
+        // Keyboard support
+        icon.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                icon.click();
+            }
+        });
+    });
+}
+
+// Removed - consolidated into main DOMContentLoaded
+
+// Modal Functionality (Privacy Policy & Regulations)
+function initModalFunctionality() {
+    const privacyModal = document.getElementById('privacy-modal');
+    const regulationsModal = document.getElementById('regulations-modal');
+    const privacyLink = document.getElementById('privacy-link');
+    const regulationsLink = document.getElementById('regulations-link');
+    const closeBtns = document.querySelectorAll('.close');
+
+    // Open privacy modal
+    privacyLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        privacyModal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        
+        // Show close button with smooth animation
+        const closeBtn = privacyModal.querySelector('.close');
+        if (closeBtn) {
+            setTimeout(() => {
+                closeBtn.classList.add('show');
+            }, 100);
+        }
+        return false;
+    });
+
+    // Open regulations modal
+    regulationsLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        regulationsModal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        
+        // Show close button with smooth animation
+        const closeBtn = regulationsModal.querySelector('.close');
+        if (closeBtn) {
+            setTimeout(() => {
+                closeBtn.classList.add('show');
+            }, 100);
+        }
+        return false;
+    });
+
+    // Function to close modals
+    function closeModals() {
+        privacyModal.style.display = 'none';
+        regulationsModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        
+        // Hide all close buttons with smooth animation
+        closeBtns.forEach(btn => {
+            btn.classList.remove('show');
+        });
+    }
+
+    // Close modals when X is clicked
+    closeBtns.forEach(closeBtn => {
+        closeBtn.addEventListener('click', function() {
+            closeModals();
+        });
+        
+        // Initially hide close buttons (already hidden by CSS)
+    });
+
+    // Close modals when clicking outside
+    window.addEventListener('click', function(e) {
+        if (e.target === privacyModal || e.target === regulationsModal) {
+            closeModals();
+        }
+    });
+
+    // Close modals with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (privacyModal.style.display === 'block' || regulationsModal.style.display === 'block') {
+                closeModals();
+            }
+        }
+    });
+}
+
+// Initialize all functions when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    // Force scroll to top
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    
+    // Initialize all components
+    initMobileNavigation();
+    initNavigationLinks();
+    initFAQFunctionality();
+    initContactIcons();
+    initModalFunctionality();
+    improveAccessibility();
+    
+    // Initialize enhancements
+    enhanceFloatingShapes();
+    initBreathingAnimation();
+    initParallaxEffect();
+    enhanceFormFields();
+    enhanceServiceCards();
+    enhanceTestimonialCards();
+    enhancePricingCards();
 });
 
-// Add cosmic explosion animation
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes cosmic-explosion {
-        0% { filter: hue-rotate(0deg) brightness(1); }
-        25% { filter: hue-rotate(90deg) brightness(1.5); }
-        50% { filter: hue-rotate(180deg) brightness(2); }
-        75% { filter: hue-rotate(270deg) brightness(1.5); }
-        100% { filter: hue-rotate(360deg) brightness(1); }
-    }
-`;
-document.head.appendChild(style);
-
-// Removed duplicate initScrollingFacts call - now handled above
+})(); // End of IIFE
